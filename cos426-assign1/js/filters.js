@@ -159,9 +159,22 @@ Filters.grayscaleFilter = function( image ) {
 
 Filters.saturationFilter = function( image, ratio ) {
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 13 lines of code.
+  var alpha = ratio + 1;
+
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var pixel = image.getPixel(x, y);
+      var luminance = 0.2126 * pixel.data[0] + 0.7152 * pixel.data[1] + 0.0722 * pixel.data[2];
+
+      pixel.data[0] = alpha * pixel.data[0] + (1-alpha) * luminance;
+      pixel.data[1] = alpha * pixel.data[1] + (1-alpha) * luminance;
+      pixel.data[2] = alpha * pixel.data[2] + (1-alpha) * luminance;
+
+      image.setPixel(x, y, pixel);
+    }
+  }
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('saturationFilter is not implemented yet');
+  //Gui.alertOnce ('saturationFilter is not implemented yet');
   return image;
 };
 
