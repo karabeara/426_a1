@@ -90,9 +90,16 @@ Filters.contrastFilter = function( image, ratio ) {
 Filters.gammaFilter = function( image, logOfGamma ) {
   var gamma = Math.exp(logOfGamma);
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 12 lines of code.
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var pixel = image.getPixel(x, y);
+	  pixel.data[0] = Math.pow(pixel.data[0], gamma);
+	  pixel.data[1] = Math.pow(pixel.data[1], gamma);
+	  pixel.data[2] = Math.pow(pixel.data[2], gamma);
+      image.setPixel(x, y, pixel)
+    }
+  }
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('gammaFilter is not implemented yet');
   return image;
 
 };
