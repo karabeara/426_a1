@@ -72,9 +72,17 @@ Filters.brightnessFilter = function( image, ratio ) {
 Filters.contrastFilter = function( image, ratio ) {
   // Reference: https://en.wikipedia.org/wiki/Image_editing#Contrast_change_and_brightening
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 14 lines of code.
+
+    for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var pixel = image.getPixel(x, y);
+	  pixel.data[0] = (pixel.data[0] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+	  pixel.data[1] = (pixel.data[1] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+	  pixel.data[2] = (pixel.data[2] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+      image.setPixel(x, y, pixel)
+    }
+  }
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('contrastFilter is not implemented yet');
   return image;
 
 };
