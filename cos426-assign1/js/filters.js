@@ -181,8 +181,29 @@ Filters.saturationFilter = function( image, ratio ) {
 Filters.whiteBalanceFilter = function( image, white ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 23 lines of code.
+  
+  var lmsWhite = white.rgbToXyz().xyzToLms();
+  
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var pixel = image.getPixel(x, y);
+	  var lmsPixel = pixel.rgbToXyz().xyzToLms();
+	  
+	  lmsPixel.data[0] = lmsPixel.data[0]/lmsWhite.data[0];
+	  lmsPixel.data[1] = lmsPixel.data[1]/lmsWhite.data[1];
+	  lmsPixel.data[2] = lmsPixel.data[2]/lmsWhite.data[2];
+	  
+	  var rgbPixel = lmsPixel.lmsToXyz().xyzToRgb();
+	  
+      pixel.data[0] = rgbPixel.data[0];
+      pixel.data[1] = rgbPixel.data[1];
+      pixel.data[2] = rgbPixel.data[2];
+
+      image.setPixel(x, y, pixel);
+    }
+  }
+  
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('whiteBalanceFilter is not implemented yet');
   return image;
 };
 
