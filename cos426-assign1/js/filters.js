@@ -107,9 +107,29 @@ Filters.gammaFilter = function( image, logOfGamma ) {
 Filters.vignetteFilter = function( image, innerR, outerR ) {
   innerR = clamp(innerR, 0, outerR-0.1); // innerR should be at least 0.1 smaller than outerR
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 17 lines of code.
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+		var x_ = (image.width/2-x)/image.width;
+		var y_ = (image.height/2-y)/image.height;
+		var d = Math.sqrt(x_*x_+y_*y_);
+		var alpha;
+		
+		if (d > outerR)
+			alpha = 0;
+		else if (d < innerR)
+			alpha = 1;
+		else
+			alpha = 1-(d-innerR)/(outerR-innerR);
+		
+		var pixel = image.getPixel(x, y);
+		
+		pixel.data[0] = alpha * pixel.data[0];
+		pixel.data[1] = alpha * pixel.data[1];
+		pixel.data[2] = alpha * pixel.data[2];
+		image.setPixel(x, y, pixel)
+    }
+  }
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('vignetteFilter is not implemented yet');
   return image;
 };
 
