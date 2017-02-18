@@ -387,9 +387,39 @@ Filters.brushFilter = function( image, radius, color, vertsString ) {
   // draw a filled circle centered at every location in centers[].
   // radius and color are specified in function arguments.
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 10 lines of code.
+  for (var i = 0; i < centers.length; i++) {
+	  var xStart, yStart, xEnd, yEnd;
+	  if (centers[i].x-radius < 0)
+		  xStart = 0;
+	  else
+		  xStart = centers[i].x-radius;
+	  
+	  if (centers[i].y-radius < 0)
+		  yStart = 0;
+	  else
+		  yStart = centers[i].y-radius;
+	  
+	  if (centers[i].x+radius+1 > image.width)
+		  xEnd = image.width;
+	  else
+		  xEnd = centers[i].x+radius+1;
+	  
+	  if (centers[i].y+radius+1 > image.height)
+		  yEnd = image.height;
+	  else
+		  yEnd = centers[i].y+radius+1;
+	  
+	  for (var x = xStart; x < xEnd; x++) {
+		for (var y = yStart; y < yEnd; y++) {
+			var x_ = x-centers[i].x;
+			var y_ = y-centers[i].y;
+			var d = Math.sqrt(x_*x_+y_*y_);
+			if (d <= radius)
+				image.setPixel(x, y, color);
+		}
+	}
+  }
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('brushFilter is not implemented yet');
 
   return image;
 };
