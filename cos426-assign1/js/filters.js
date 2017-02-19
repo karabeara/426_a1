@@ -125,10 +125,10 @@ Filters.contrastFilter = function( image, ratio ) {
     for (var x = 0; x < image.width; x++) {
     for (var y = 0; y < image.height; y++) {
       var pixel = image.getPixel(x, y);
-	  pixel.data[0] = (pixel.data[0] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
-	  pixel.data[1] = (pixel.data[1] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
-	  pixel.data[2] = (pixel.data[2] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
-      image.setPixel(x, y, pixel)
+	     pixel.data[0] = (pixel.data[0] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+	     pixel.data[1] = (pixel.data[1] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+	     pixel.data[2] = (pixel.data[2] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+       image.setPixel(x, y, pixel);
     }
   }
   // ----------- STUDENT CODE END ------------
@@ -142,10 +142,10 @@ Filters.gammaFilter = function( image, logOfGamma ) {
   for (var x = 0; x < image.width; x++) {
     for (var y = 0; y < image.height; y++) {
       var pixel = image.getPixel(x, y);
-	  pixel.data[0] = Math.pow(pixel.data[0], gamma);
-	  pixel.data[1] = Math.pow(pixel.data[1], gamma);
-	  pixel.data[2] = Math.pow(pixel.data[2], gamma);
-      image.setPixel(x, y, pixel)
+	     pixel.data[0] = Math.pow(pixel.data[0], gamma);
+	     pixel.data[1] = Math.pow(pixel.data[1], gamma);
+	     pixel.data[2] = Math.pow(pixel.data[2], gamma);
+       image.setPixel(x, y, pixel);
     }
   }
   // ----------- STUDENT CODE END ------------
@@ -162,16 +162,16 @@ Filters.vignetteFilter = function( image, innerR, outerR ) {
 		var y_ = (image.height/2-y)/image.height;
 		var d = Math.sqrt(x_*x_+y_*y_);
 		var alpha;
-		
+
 		if (d > outerR)
 			alpha = 0;
 		else if (d < innerR)
 			alpha = 1;
 		else
 			alpha = 1-(d-innerR)/(outerR-innerR);
-		
+
 		var pixel = image.getPixel(x, y);
-		
+
 		pixel.data[0] = alpha * pixel.data[0];
 		pixel.data[1] = alpha * pixel.data[1];
 		pixel.data[2] = alpha * pixel.data[2];
@@ -230,20 +230,20 @@ Filters.saturationFilter = function( image, ratio ) {
 Filters.whiteBalanceFilter = function( image, white ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 23 lines of code.
-  
+
   var lmsWhite = white.rgbToXyz().xyzToLms();
-  
+
   for (var x = 0; x < image.width; x++) {
     for (var y = 0; y < image.height; y++) {
       var pixel = image.getPixel(x, y);
 	  var lmsPixel = pixel.rgbToXyz().xyzToLms();
-	  
+
 	  lmsPixel.data[0] = lmsPixel.data[0]/lmsWhite.data[0];
 	  lmsPixel.data[1] = lmsPixel.data[1]/lmsWhite.data[1];
 	  lmsPixel.data[2] = lmsPixel.data[2]/lmsWhite.data[2];
-	  
+
 	  var rgbPixel = lmsPixel.lmsToXyz().xyzToRgb();
-	  
+
       pixel.data[0] = rgbPixel.data[0];
       pixel.data[1] = rgbPixel.data[1];
       pixel.data[2] = rgbPixel.data[2];
@@ -251,7 +251,7 @@ Filters.whiteBalanceFilter = function( image, white ) {
       image.setPixel(x, y, pixel);
     }
   }
-  
+
   // ----------- STUDENT CODE END ------------
   return image;
 };
@@ -445,22 +445,22 @@ Filters.brushFilter = function( image, radius, color, vertsString ) {
 		  xStart = 0;
 	  else
 		  xStart = centers[i].x-radius;
-	  
+
 	  if (centers[i].y-radius < 0)
 		  yStart = 0;
 	  else
 		  yStart = centers[i].y-radius;
-	  
+
 	  if (centers[i].x+radius+1 > image.width)
 		  xEnd = image.width;
 	  else
 		  xEnd = centers[i].x+radius+1;
-	  
+
 	  if (centers[i].y+radius+1 > image.height)
 		  yEnd = image.height;
 	  else
 		  yEnd = centers[i].y+radius+1;
-	  
+
 	  for (var x = xStart; x < xEnd; x++) {
 		for (var y = yStart; y < yEnd; y++) {
 			var x_ = x-centers[i].x;
