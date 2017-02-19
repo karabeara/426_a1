@@ -16,7 +16,7 @@ function clamp(val, min, max) {
 
 function convolve1D(image, vec, newImg) {
 	  var interImg = image.createImg(image.width, image.height);
-	
+
 	for (var y = 0; y < image.height; y++) {
 		for (var x = 0; x < image.width; x++) {
 			var red_sum = 0;
@@ -57,7 +57,7 @@ function convolve1D(image, vec, newImg) {
 			newImg.setPixel(x, y, newPixel);
 		}
 	}
-	
+
 	return 1;
 }
 
@@ -273,10 +273,15 @@ Filters.gaussianFilter = function( image, sigma ) {
   var winR = Math.round(sigma*3);
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 54 lines of code.
-  var vec = [1, 1, 1, 1, 1, 1, 1, 1, 1];
- // for (var x = 0; x < image.width; x++)
-	  
+  var vec = [];
+
+  for (var i = 0; i < 2*winR; i++) {
+    vec[i] = (1/(sigma*Math.sqrt(2*pi))) * Math.exp(-(Math.pow(i-winR, 2))/(2*sigma*sigma));
+    //vec[i] = Math.pow(1/(sigma*Math.sqrt(2*pi)), -(Math.pow(i-winR, 2))/(2*sigma*sigma));
+  }
+
   convolve1D(image, vec, newImg);
+
   // ----------- STUDENT CODE END ------------
   return newImg;
 };
