@@ -62,6 +62,39 @@ function convolve1D(image, vec, newImg) {
 }
 
 
+function convolve2D(image, matrix, newImg) {
+
+	for (var y = 0; y < image.height; y++) {
+		for (var x = 0; x < image.width; x++) {
+			var red_sum = 0;
+			var green_sum = 0;
+			var blue_sum = 0;
+			var weight_sum = 0;
+			for (var v_x = 0; v_x < matrix.length; v_x++) {
+        for (var v_y = 0; v_y < matrix[0].length; v_y++) {
+
+				  if (x+v_x-matrix.length/2 >= 0 &&
+              y+v_y-matrix[0].length/2 >= 0 &&
+              x+v_x-matrix.length/2 < image.width &&
+              y+v_y-matrix[0].length/2 < image.height) {
+					   var pixel = image.getPixel(x+v_x-matrix.length/2, y+v_y-matrix[0].length/2);
+					   red_sum = red_sum + matrix[v_x][v_y]*pixel.data[0];
+					   green_sum = green_sum + matrix[v_x][v_y]*pixel.data[1];
+					   blue_sum = blue_sum + matrix[v_x][v_y]*pixel.data[2];
+					   weight_sum = weight_sum + matrix[v_x][v_y];
+				  }
+        }
+			}
+			var pixel = image.getPixel(x,y);
+			var newPixel =  new Pixel(red_sum/weight_sum, green_sum/weight_sum, blue_sum/weight_sum, pixel.a, "rgb");
+			newImg.setPixel(x, y, newPixel);
+		}
+	}
+
+	return 1;
+}
+
+
 // ----------- STUDENT CODE END ------------
 
 
@@ -277,7 +310,6 @@ Filters.gaussianFilter = function( image, sigma ) {
 
   for (var i = 0; i < 2*winR; i++) {
     vec[i] = (1/(sigma*Math.sqrt(2*pi))) * Math.exp(-(Math.pow(i-winR, 2))/(2*sigma*sigma));
-    //vec[i] = Math.pow(1/(sigma*Math.sqrt(2*pi)), -(Math.pow(i-winR, 2))/(2*sigma*sigma));
   }
 
   convolve1D(image, vec, newImg);
@@ -288,18 +320,22 @@ Filters.gaussianFilter = function( image, sigma ) {
 
 Filters.edgeFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
+  var newImg = image.createImg(image.width, image.height);
+  var matrix = [[-1, -1, 0], [-1, 0, 1], [0, 1, 1]];
+  convolve2D(image, matrix, newImg);
   // ----------- Our reference solution uses 51 lines of code.
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('edgeFilter is not implemented yet');
-  return image;
+  return newImg;
 };
 
 Filters.sharpenFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
+  var newImg = image.createImg(image.width, image.height);
+  var vec = [-1, 4, -1];
+  convolve1D(image, vec, newImg);
   // ----------- Our reference solution uses 29 lines of code.
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('sharpenFilter is not implemented yet');
-  return image;
+  return newImg;
 };
 
 Filters.medianFilter = function( image, winR ) {
