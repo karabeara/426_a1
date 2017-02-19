@@ -13,6 +13,55 @@ function clamp(val, min, max) {
 
 // ----------- STUDENT CODE BEGIN ------------
 // ----------- Our reference solution uses 77 lines of code.
+
+function convolve1D(image, vec, newImg) {
+	  var interImg = image.createImg(image.width, image.height);
+	
+	for (var y = 0; y < image.height; y++) {
+		for (var x = 0; x < image.width; x++) {
+			var red_sum = 0;
+			var green_sum = 0;
+			var blue_sum = 0;
+			var weight_sum = 0;
+			for (var v_x = 0; v_x < vec.length; v_x++) {
+				if (x+v_x-vec.length/2 >= 0 && x+v_x-vec.length/2 < image.width) {
+					var pixel = image.getPixel(x+v_x-vec.length/2,y);
+					red_sum = red_sum + vec[v_x]*pixel.data[0];
+					green_sum = green_sum + vec[v_x]*pixel.data[1];
+					blue_sum = blue_sum + vec[v_x]*pixel.data[2];
+					weight_sum = weight_sum + vec[v_x];
+				}
+			}
+			var pixel = image.getPixel(x,y);
+			var newPixel =  new Pixel(red_sum/weight_sum, green_sum/weight_sum, blue_sum/weight_sum, pixel.a, "rgb");
+			interImg.setPixel(x, y, newPixel);
+		}
+	}
+	for (var x = 0; x < image.width; x++) {
+		for (var y = 0; y < image.height; y++) {
+			var red_sum = 0;
+			var green_sum = 0;
+			var blue_sum = 0;
+			var weight_sum = 0;
+			for (var v_y = 0; v_y < vec.length; v_y++) {
+				if (y+v_y-vec.length/2 >= 0 && y+v_y-vec.length/2 < image.height) {
+					var pixel = interImg.getPixel(x,y+v_y-vec.length/2);
+					red_sum = red_sum + vec[v_y]*pixel.data[0];
+					green_sum = green_sum + vec[v_y]*pixel.data[1];
+					blue_sum = blue_sum + vec[v_y]*pixel.data[2];
+					weight_sum = weight_sum + vec[v_y];
+				}
+			}
+			var pixel = interImg.getPixel(x,y);
+			var newPixel =  new Pixel(red_sum/weight_sum, green_sum/weight_sum, blue_sum/weight_sum, pixel.a, "rgb");
+			newImg.setPixel(x, y, newPixel);
+		}
+	}
+	
+	return 1;
+}
+
+
 // ----------- STUDENT CODE END ------------
 
 
@@ -224,8 +273,11 @@ Filters.gaussianFilter = function( image, sigma ) {
   var winR = Math.round(sigma*3);
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 54 lines of code.
+  var vec = [1, 1, 1, 1, 1, 1, 1, 1, 1];
+ // for (var x = 0; x < image.width; x++)
+	  
+  convolve1D(image, vec, newImg);
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('gaussianFilter is not implemented yet');
   return newImg;
 };
 
