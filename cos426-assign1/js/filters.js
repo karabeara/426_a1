@@ -103,8 +103,19 @@ Filters.samplePixel = function ( image, x, y, mode ) {
   if ( mode == 'bilinear') {
     // ----------- STUDENT CODE BEGIN ------------
     // ----------- Our reference solution uses 19 lines of code.
+	var a = Math.ceil(x)-x;
+	var b = Math.ceil(y)-y;
+	var ccP = image.getPixel(Math.ceil(x), Math.ceil(y));
+	var cfP = image.getPixel(Math.ceil(x), Math.floor(y));
+	var fcP = image.getPixel(Math.floor(x), Math.ceil(y));
+	var ffP = image.getPixel(Math.floor(x), Math.floor(y));
+	return new Pixel(
+		(1-a)*(1-b)*ccP.data[0]+(1-a)*b*cfP.data[0]+a*(1-b)*fcP.data[0]+a*b*ffP.data[0],
+		(1-a)*(1-b)*ccP.data[1]+(1-a)*b*cfP.data[1]+a*(1-b)*fcP.data[1]+a*b*ffP.data[1],
+		(1-a)*(1-b)*ccP.data[2]+(1-a)*b*cfP.data[2]+a*(1-b)*fcP.data[2]+a*b*ffP.data[2],
+		(1-a)*(1-b)*ccP.a+(1-a)*b*cfP.a+a*(1-b)*fcP.a+a*b*ffP.a,
+		ccP.colorSpace);
     // ----------- STUDENT CODE END ------------
-    Gui.alertOnce ('bilinear sampling is not implemented yet');
 
   } else if ( mode == 'gaussian' ) {
     // ----------- STUDENT CODE BEGIN ------------
@@ -396,9 +407,16 @@ Filters.floydFilter = function( image, bitsPerChannel ) {
 
 Filters.scaleFilter = function( image, ratio, sampleMode ) {
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 19 lines of code.
+  var w = image.width*ratio;
+  var h = image.height*ratio;
+  var newImg = image.createImg(image.width*ratio, image.height*ratio);
+  for (var x = 0; x < w; x++) {
+	  for (var y = 0; y < h; y++) {
+		  newImg.setPixel(x, y, Filters.samplePixel(image, x/ratio, y/ratio, sampleMode));
+	  }
+  }
+  image = newImg;
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('scaleFilter is not implemented yet');
   return image;
 };
 
