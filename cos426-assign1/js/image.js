@@ -7,7 +7,7 @@
 function Pixel( comp0, comp1, comp2, a, colorSpace ) {
   if (typeof comp0 === "string") {
     this.colorSpace = "rgb";
-    
+
     if (comp0.match(/rgb/g)) {
       // rgba string
       this.data = comp0.match(/-?\d+\.?\d*/g);

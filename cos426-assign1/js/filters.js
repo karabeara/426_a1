@@ -228,9 +228,45 @@ Filters.vignetteFilter = function( image, innerR, outerR ) {
 
 Filters.histogramEqualizationFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
+  // NEED TO FIX PROBLEM WITH BRIGHT WHITES
+  var bins = new Array(256);
+  for (var i = 0; i < 255; i+=1) {
+    bins[i] = 0;
+  }
+  var minLum, imageSize;
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var pixel = image.getPixel(x, y);
+      var hslPixel = pixel.rgbToHsl();
+      var luminance = Math.round(hslPixel.data[2] * 255);
+      pixel = hslPixel.hslToRgb();
+      bins[luminance] = bins[luminance] + 1;
+    }
+  }
+
+  minLum = 0;
+  for (var i = 1; i < 255; i+=1) {
+    if (bins[i] != 0) { minLum = i; break; }
+  }
+
+  for (var i = 1; i < 255; i+=1) {
+    bins[i] = bins[i] + bins [i-1];
+  }
+
+  imageSize = image.width * image.height;
+  for (var x = 0; x < image.width; x += 1) {
+    for (var y = 0; y < image.height; y += 1) {
+      var hslPixel = image.getPixel(x, y).rgbToHsl();
+      var lum = Math.round(255 * hslPixel.data[2]);
+      hslPixel.data[2] = (bins[lum] - bins[minLum]) / (imageSize - 1);
+      pixel = hslPixel.hslToRgb();
+  		image.setPixel(x, y, pixel);
+    }
+  }
+
   // ----------- Our reference solution uses 31 lines of code.
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('histogramEqualizationFilter is not implemented yet');
+  //Gui.alertOnce ('histogramEqualizationFilter is not implemented yet');
   return image;
 };
 
