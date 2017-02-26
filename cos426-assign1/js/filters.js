@@ -129,7 +129,7 @@ Filters.samplePixel = function ( image, x, y, mode ) {
     // ----------- Our reference solution uses 37 lines of code.
 	var sigma = 1;
 	var winR = Math.max(1, Math.round(sigma*3));
-	
+
 	var red_sum = 0;
 	var green_sum = 0;
 	var blue_sum = 0;
@@ -619,7 +619,7 @@ Filters.translateFilter = function( image, x, y, sampleMode ) {
 Filters.rotateFilter = function( image, radians, sampleMode ) {
   // Note: set pixels outside the image to RGBA(0,0,0,0)
   // ----------- STUDENT CODE BEGIN ------------
-  var w = 2*image.width; 
+  var w = 2*image.width;
   var h = 2*image.height;
   var newImg = image.createImg(w, h);
   for (var x = 0; x < w; x++) {
@@ -641,7 +641,7 @@ Filters.rotateFilter = function( image, radians, sampleMode ) {
 Filters.swirlFilter = function( image, radians, sampleMode ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 27 lines of code.
-  var w = image.width; 
+  var w = image.width;
   var h = image.height;
   var newImg = image.createImg(w, h);
   for (var x = 0; x < w; x++) {
@@ -677,28 +677,36 @@ Filters.getAlphaFilter = function( backgroundImg, foregroundImg) {
 
 Filters.compositeFilter = function( backgroundImg, foregroundImg ) {
   // ----------- STUDENT CODE BEGIN ------------
-  /* for (var x = 0; x < image.width; x++) {
-    for (var y = 0; y < image.height; y++) {
+
+  for (var x = 0; x < backgroundImg.width; x++) {
+    for (var y = 0; y < backgroundImg.height; y++) {
       var backgroundPixel = backgroundImg.getPixel(x, y);
       var foregroundPixel = foregroundImg.getPixel(x, y);
+      var alpha = foregroundPixel.a;
+      if (alpha > 0) {
+        backgroundPixel.data[0] = alpha * foregroundPixel.data[0] + (1-alpha) * backgroundPixel.data[0];
+        backgroundPixel.data[1] = alpha * foregroundPixel.data[1] + (1-alpha) * backgroundPixel.data[1];
+        backgroundPixel.data[2] = alpha * foregroundPixel.data[2] + (1-alpha) * backgroundPixel.data[2];
+      }
 
-      pixel.data[0] = alpha * pixel.data[0] + (1-alpha) * dirLuminance;
-      pixel.data[1] = alpha * pixel.data[1] + (1-alpha) * dirLuminance;
-      pixel.data[2] = alpha * pixel.data[2] + (1-alpha) * dirLuminance;
-
-      image.setPixel(x, y, pixel)
+      backgroundImg.setPixel(x, y, backgroundPixel)
     }
   }
-  */
+
   // ----------- Our reference solution uses 14 lines of code.
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('compositeFilter is not implemented yet');
+  //Gui.alertOnce ('compositeFilter is not implemented yet');
   return backgroundImg;
 };
-
+/*
 function warp(image, initLine, finalLine) {
+<<<<<<< Updated upstream
 	/*
   var dsum = 0;
+=======
+
+  var dsum =
+>>>>>>> Stashed changes
   var weightsum = 0;
   for (var x = 0; x < finalImg.height; x++) {
     for (var y = 0; y < finalImg.width; y++) {
@@ -709,7 +717,7 @@ function warp(image, initLine, finalLine) {
   }
 */
 }
-
+*/
 Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
   var lines = Parser.parseJson( "images/" + linesFile );
   // ----------- STUDENT CODE BEGIN ------------
