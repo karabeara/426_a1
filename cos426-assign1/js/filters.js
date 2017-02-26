@@ -62,32 +62,34 @@ function convolve1D(image, vec, newImg) {
 }
 
 
-function convolve2D(image, matrix, newImg) {
+function convolve2D(image, matrix, newImg, invert) {
 
 	for (var y = 0; y < image.height; y++) {
 		for (var x = 0; x < image.width; x++) {
-      var lum_sum = 0;
+			var lum_sum = 0;
 			var weight_sum = 0;
 			for (var v_x = 0; v_x < matrix.length; v_x++) {
-        for (var v_y = 0; v_y < matrix[0].length; v_y++) {
-
-				  if (x+v_x-matrix.length/2 >= 0 &&
-              y+v_y-matrix[0].length/2 >= 0 &&
-              x+v_x-matrix.length/2 < image.width &&
-              y+v_y-matrix[0].length/2 < image.height) {
-             var pixel = image.getPixel(x+v_x-matrix.length/2, y+v_y-matrix[0].length/2);
-             var hslPixel = pixel.rgbToHsl();
-             lum_sum = lum_sum + matrix[v_x][v_y] * hslPixel.data[2];
-					   weight_sum = weight_sum + matrix[v_x][v_y];
-				  }
-        }
+				for (var v_y = 0; v_y < matrix[0].length; v_y++) {
+					if (x+v_x-matrix.length/2 >= 0 &&
+					  y+v_y-matrix[0].length/2 >= 0 &&
+					  x+v_x-matrix.length/2 < image.width &&
+					  y+v_y-matrix[0].length/2 < image.height) {
+						var pixel = image.getPixel(x+v_x-matrix.length/2, y+v_y-matrix[0].length/2);
+						var hslPixel = pixel.rgbToHsl();
+						lum_sum = lum_sum + matrix[v_x][v_y] * hslPixel.data[2];
+						weight_sum = weight_sum + matrix[v_x][v_y];
+					}
+				}
 			}
 			var pixel = image.getPixel(x,y);
-      var hslPixel = pixel.rgbToHsl();
-      var luminance = clamp(lum_sum/weight_sum, 0, 1);
-      var intPixel =  new Pixel(hslPixel.data[0], hslPixel.data[1], luminance, hslPixel.a, "hsl");
-      var newPixel = intPixel.hslToRgb();
+			var hslPixel = pixel.rgbToHsl();
+			var luminance = clamp(lum_sum, 0, 1);
+			if (invert) luminance = 1-luminance;
+			var intPixel =  new Pixel(hslPixel.data[0], hslPixel.data[1], luminance, hslPixel.a, "hsl");
+			var newPixel = intPixel.hslToRgb();
 			newImg.setPixel(x, y, newPixel);
+
+
 		}
 	}
 
@@ -487,9 +489,8 @@ Filters.gaussianFilter = function( image, sigma ) {
 Filters.edgeFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
   var newImg = image.createImg(image.width, image.height);
-  var matrix = [[-1, 0, 1], [-2, 0, -2], [-1, 0, 1]];
-  var matrix = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]];
-  convolve2D(image, matrix, newImg);
+  var matrix = [[-1, -1, -1], [-1, 8, -1], [-1, -1, -1]];
+  convolve2D(image, matrix, newImg, true);
   // ----------- Our reference solution uses 51 lines of code.
   // ----------- STUDENT CODE END ------------
   return newImg;
@@ -499,7 +500,7 @@ Filters.sharpenFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
   var newImg = image.createImg(image.width, image.height);
   var matrix = [[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]];
-  convolve2D(image, matrix, newImg);
+  convolve2D(image, matrix, newImg, false);
   // ----------- Our reference solution uses 29 lines of code.
   // ----------- STUDENT CODE END ------------
   return newImg;
