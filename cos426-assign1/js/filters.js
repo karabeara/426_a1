@@ -120,9 +120,28 @@ Filters.samplePixel = function ( image, x, y, mode ) {
   } else if ( mode == 'gaussian' ) {
     // ----------- STUDENT CODE BEGIN ------------
     // ----------- Our reference solution uses 37 lines of code.
+	var sigma = 1;
+	var winR = Math.max(1, Math.round(sigma*3));
+	
+	var red_sum = 0;
+	var green_sum = 0;
+	var blue_sum = 0;
+	var weight_sum = 0;
+	for (var v_x = x-winR; v_x < x+winR; v_x++) {
+		for (var v_y = y-winR; v_y < y+winR; v_y++) {
+				  if (v_x >= 0 && v_y >= 0 && v_x < image.width && v_y < image.height) {
+					   var d2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
+					   var weight = Math.exp(-d2/(2*sigma*sigma));
+					   var pixel = image.getPixel(v_x, v_y);
+					   red_sum = red_sum + weight*pixel.data[0];
+					   green_sum = green_sum + weight*pixel.data[1];
+					   blue_sum = blue_sum + weight*pixel.data[2];
+					   weight_sum = weight_sum + weight;
+				  }
+		}
+	}
+	return new Pixel(red_sum/weight_sum, green_sum/weight_sum, blue_sum/weight_sum, pixel.a, "rgb");
     // ----------- STUDENT CODE END ------------
-    Gui.alertOnce ('gaussian sampling is not implemented yet');
-
   } else { // point sampling
 
     y = Math.max( 0, Math.min(Math.round(y), image.height- 1) );
@@ -169,9 +188,9 @@ Filters.contrastFilter = function( image, ratio ) {
     for (var x = 0; x < image.width; x++) {
     for (var y = 0; y < image.height; y++) {
       var pixel = image.getPixel(x, y);
-	     pixel.data[0] = (pixel.data[0] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
-	     pixel.data[1] = (pixel.data[1] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
-	     pixel.data[2] = (pixel.data[2] - 0.5) * (Math.tan ((ratio + 1) * 3.14159/4) ) + 0.5;
+	     pixel.data[0] = (pixel.data[0] - 0.5) * (Math.tan ((ratio + 1) * pi/4) ) + 0.5;
+	     pixel.data[1] = (pixel.data[1] - 0.5) * (Math.tan ((ratio + 1) * pi/4) ) + 0.5;
+	     pixel.data[2] = (pixel.data[2] - 0.5) * (Math.tan ((ratio + 1) * pi/4) ) + 0.5;
        image.setPixel(x, y, pixel);
     }
   }
