@@ -228,9 +228,9 @@ Filters.vignetteFilter = function( image, innerR, outerR ) {
 
 Filters.histogramEqualizationFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
-  // NEED TO FIX PROBLEM WITH BRIGHT WHITES
+
   var bins = new Array(256);
-  for (var i = 0; i < 255; i+=1) {
+  for (var i = 0; i < 256; i+=1) {
     bins[i] = 0;
   }
   var minLum, imageSize;
@@ -245,11 +245,11 @@ Filters.histogramEqualizationFilter = function( image ) {
   }
 
   minLum = 0;
-  for (var i = 1; i < 255; i+=1) {
+  for (var i = 1; i < 256; i+=1) {
     if (bins[i] != 0) { minLum = i; break; }
   }
 
-  for (var i = 1; i < 255; i+=1) {
+  for (var i = 1; i < 256; i+=1) {
     bins[i] = bins[i] + bins [i-1];
   }
 
@@ -338,9 +338,104 @@ Filters.whiteBalanceFilter = function( image, white ) {
 
 Filters.histogramMatchFilter = function( image, refImg, value ) {
   // ----------- STUDENT CODE BEGIN ------------
-  // ----------- Our reference solution uses 0 lines of code.
+  var ourBinsR = new Array(256);
+  var ourBinsG = new Array(256);
+  var ourBinsB = new Array(256);
+  var refBinsR = new Array(256);
+  var refBinsG = new Array(256);
+  var refBinsB = new Array(256);
+
+  for (var i = 0; i < 256; i+=1) {
+    ourBinsR[i] = 0;
+    ourBinsG[i] = 0;
+    ourBinsB[i] = 0;
+    refBinsR[i] = 0;
+    refBinsG[i] = 0;
+    refBinsB[i] = 0;
+  }
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var pixel = image.getPixel(x, y);
+      var red = Math.round(pixel.data[0] * 255);
+      var green = Math.round(pixel.data[1] * 255);
+      var blue = Math.round(pixel.data[2] * 255);
+      ourBinsR[red] = ourBinsR[red] + 1;
+      ourBinsG[green] = ourBinsG[green] + 1;
+      ourBinsB[blue] = ourBinsB[blue] + 1;
+    }
+  }
+  for (var x = 0; x < refImg.width; x++) {
+    for (var y = 0; y < refImg.height; y++) {
+      var pixel = refImg.getPixel(x, y);
+      var red = Math.round(pixel.data[0] * 255);
+      var green = Math.round(pixel.data[1] * 255);
+      var blue = Math.round(pixel.data[2] * 255);
+      refBinsR[red] = refBinsR[red] + 1;
+      refBinsG[green] = refBinsG[green] + 1;
+      refBinsB[blue] = refBinsB[blue] + 1;
+    }
+  }
+  for (var i = 1; i < 255; i+=1) {
+    ourBinsR[i] = ourBinsR[i] + ourBinsR[i-1];
+    ourBinsG[i] = ourBinsG[i] + ourBinsG[i-1];
+    ourBinsB[i] = ourBinsB[i] + ourBinsB[i-1];
+    refBinsR[i] = refBinsR[i] + refBinsR[i-1];
+    refBinsG[i] = refBinsG[i] + refBinsG[i-1];
+    refBinsB[i] = refBinsB[i] + refBinsB[i-1];
+  }
+
+  var imageSize = image.width * image.height * 1.0;
+  var refSize = refImg.width * refImg.height * 1.0;
+  for (var i = 1; i < 255; i+=1) {
+    ourBinsR[i] = ourBinsR[i] / imageSize;
+    ourBinsG[i] = ourBinsG[i] / imageSize;
+    ourBinsB[i] = ourBinsB[i] / imageSize;
+    refBinsR[i] = refBinsR[i] / refSize;
+    refBinsG[i] = refBinsG[i] / refSize;
+    refBinsB[i] = refBinsB[i] / refSize;
+  }
+
+  for (var x = 0; x < image.width; x += 1) {
+    for (var y = 0; y < image.height; y += 1) {
+      var pixel = image.getPixel(x, y);
+      var red = Math.round(255 * pixel.data[0]);
+      var green = Math.round(255 * pixel.data[1]);
+      var blue = Math.round(255 * pixel.data[2]);
+      var r = ourBinsR[red];
+      var g = ourBinsG[green];
+      var b = ourBinsB[blue];
+      var rRef, gRef, bRef;
+
+      if (r < refBinsR[1]) { rRef = 0; }
+      else {
+        for (var i = 1; i < 255; i+=1) {
+          if (r >= refBinsR[i-1] && r < refBinsR[i+1]) { rRef = i; break; }
+          else if (i == 254) { rRef = 255; break; }
+        }
+      }
+      if (g < refBinsG[1]) { gRef = 0; }
+      else {
+        for (var i = 1; i < 255; i+=1) {
+          if (g >= refBinsG[i-1] && g < refBinsG[i+1]) { gRef = i; break; }
+          else if (i == 254) { gRef = 255; break; }
+        }
+      }
+      if (b < refBinsB[1]) { bRef = 0; }
+      else {
+        for (var i = 1; i < 255; i+=1) {
+          if (b >= refBinsB[i-1] && b < refBinsB[i+1]) { bRef = i; break; }
+          else if (i == 254) { bRef = 255; break; }
+        }
+      }
+      pixel.data[0] = rRef / 255.0;
+      pixel.data[1] = gRef / 255.0;
+      pixel.data[2] = bRef / 255.0;
+  		image.setPixel(x, y, pixel);
+    }
+  }
+
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('histogramMatchFilter is not implemented yet');
+  //Gui.alertOnce ('histogramMatchFilter is not implemented yet');
   return image;
 };
 
