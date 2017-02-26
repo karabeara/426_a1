@@ -94,6 +94,11 @@ function convolve2D(image, matrix, newImg) {
 	return 1;
 }
 
+function tupleComparator(l, pix) {
+   if (l[0] < pix[0]) return -1;
+   if (l[0] > pix[0]) return 1;
+   return 0;
+ }
 
 // ----------- STUDENT CODE END ------------
 
@@ -503,8 +508,27 @@ Filters.medianFilter = function( image, winR ) {
   // winR: the window will be  [-winR, winR];
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 31 lines of code.
+  var newImg = image.createImg(image.width, image.height);
+  for (var x = 0; x < image.width; x++) {
+	  for (var y = 0; y < image.height; y++) {
+		  var ls = [];
+		  var i = 0;
+		  for (var v_x = x - winR; v_x < x + winR; v_x++) {
+			  for (var v_y = y - winR; v_y < y + winR; v_y++) {
+				  if (v_x >= 0 && v_y >= 0 && v_x < image.width && v_y < image.height) {
+					  var pix = image.getPixel(v_x,v_y).rgbToHsl();
+					  ls[i] = [pix.data[2], pix];
+					  i = i + 1;
+				  }
+			  }
+		  }
+		  ls.sort(tupleComparator);
+		  var index = Math.floor(ls.length/2);
+		  newImg.setPixel(x, y, ls[index][1].hslToRgb());
+	  }
+  }
+  image = newImg;
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('medianFilter is not implemented yet');
   return image;
 };
 
