@@ -258,7 +258,7 @@ Filters.histogramEqualizationFilter = function( image ) {
     for (var y = 0; y < image.height; y += 1) {
       var hslPixel = image.getPixel(x, y).rgbToHsl();
       var lum = Math.round(255 * hslPixel.data[2]);
-      hslPixel.data[2] = (bins[lum] - bins[minLum]) / (imageSize - 1);
+      hslPixel.data[2] = clamp((bins[lum] - bins[minLum]) / (imageSize - 1), 0, 1);
       pixel = hslPixel.hslToRgb();
   		image.setPixel(x, y, pixel);
     }
