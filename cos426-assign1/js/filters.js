@@ -582,7 +582,7 @@ Filters.translateFilter = function( image, x, y, sampleMode ) {
 		if (i+x >= 0 && j+y >= 0 && i+x < w && j+y < h)
 			newImg.setPixel(i, j, Filters.samplePixel(image, i+x, j+y, sampleMode));
 		else
-			newImg.setPixel(i, j, new Pixel(0, 0, 0, 1, "rgb"));
+			newImg.setPixel(i, j, new Pixel(0, 0, 0, 0, "rgb"));
 	  }
   }
   image = newImg;
@@ -593,16 +593,18 @@ Filters.translateFilter = function( image, x, y, sampleMode ) {
 Filters.rotateFilter = function( image, radians, sampleMode ) {
   // Note: set pixels outside the image to RGBA(0,0,0,0)
   // ----------- STUDENT CODE BEGIN ------------
-  var w = 2*image.width; //DIMENTIONS NEED TO BE FIXED
+  var w = 2*image.width; 
   var h = 2*image.height;
-  console.log(h);
   var newImg = image.createImg(w, h);
   for (var x = 0; x < w; x++) {
 	  for (var y = 0; y < h; y++) {
 		var u = (x-w/2)*Math.cos(-radians) - (y-h/2)*Math.sin(-radians)+image.width/2;
 		var v = (x-w/2)*Math.sin(-radians) + (y-h/2)*Math.cos(-radians)+image.height/2;
-		if (u >= 0 && u < image.width && v >= 0 && v < image.height)
+		if (u >= 0 && u < image.width && v >= 0 && v < image.height) {
 			newImg.setPixel(x, y, Filters.samplePixel(image, u, v, sampleMode));
+		} else {
+			newImg.setPixel(x,y, new Pixel(0, 0, 0, 0, "rgb"));
+		}
 	  }
   }
   image = newImg;
@@ -613,8 +615,23 @@ Filters.rotateFilter = function( image, radians, sampleMode ) {
 Filters.swirlFilter = function( image, radians, sampleMode ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 27 lines of code.
+  var w = image.width; 
+  var h = image.height;
+  var newImg = image.createImg(w, h);
+  for (var x = 0; x < w; x++) {
+	  for (var y = 0; y < h; y++) {
+		var d = Math.sqrt((x-w/2)*(x-w/2)+(y-h/2)*(y-h/2))/w;
+		var u = (x-w/2)*Math.cos(-radians*d) - (y-h/2)*Math.sin(-radians*d)+image.width/2;
+		var v = (x-w/2)*Math.sin(-radians*d) + (y-h/2)*Math.cos(-radians*d)+image.height/2;
+		if (u < 0) u = 0;
+		if (v < 0) v = 0;
+		if (u >= w) u = w-1;
+		if (v >= h) v = h-1;
+		newImg.setPixel(x, y, Filters.samplePixel(image, u, v, sampleMode));
+	  }
+  }
+  image = newImg;
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('swirlFilter is not implemented yet');
   return image;
 };
 
