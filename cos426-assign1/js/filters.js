@@ -66,9 +66,7 @@ function convolve2D(image, matrix, newImg) {
 
 	for (var y = 0; y < image.height; y++) {
 		for (var x = 0; x < image.width; x++) {
-			var red_sum = 0;
-			var green_sum = 0;
-			var blue_sum = 0;
+      var lum_sum = 0;
 			var weight_sum = 0;
 			for (var v_x = 0; v_x < matrix.length; v_x++) {
         for (var v_y = 0; v_y < matrix[0].length; v_y++) {
@@ -77,16 +75,18 @@ function convolve2D(image, matrix, newImg) {
               y+v_y-matrix[0].length/2 >= 0 &&
               x+v_x-matrix.length/2 < image.width &&
               y+v_y-matrix[0].length/2 < image.height) {
-					   var pixel = image.getPixel(x+v_x-matrix.length/2, y+v_y-matrix[0].length/2);
-					   red_sum = red_sum + matrix[v_x][v_y]*pixel.data[0];
-					   green_sum = green_sum + matrix[v_x][v_y]*pixel.data[1];
-					   blue_sum = blue_sum + matrix[v_x][v_y]*pixel.data[2];
+             var pixel = image.getPixel(x+v_x-matrix.length/2, y+v_y-matrix[0].length/2);
+             var hslPixel = pixel.rgbToHsl();
+             lum_sum = lum_sum + matrix[v_x][v_y] * hslPixel.data[2];
 					   weight_sum = weight_sum + matrix[v_x][v_y];
 				  }
         }
 			}
 			var pixel = image.getPixel(x,y);
-			var newPixel =  new Pixel(red_sum/weight_sum, green_sum/weight_sum, blue_sum/weight_sum, pixel.a, "rgb");
+      var hslPixel = pixel.rgbToHsl();
+      var luminance = clamp(lum_sum/weight_sum, 0, 1);
+      var intPixel =  new Pixel(hslPixel.data[0], hslPixel.data[1], luminance, hslPixel.a, "hsl");
+      var newPixel = intPixel.hslToRgb();
 			newImg.setPixel(x, y, newPixel);
 		}
 	}
@@ -487,7 +487,8 @@ Filters.gaussianFilter = function( image, sigma ) {
 Filters.edgeFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
   var newImg = image.createImg(image.width, image.height);
-  var matrix = [[-1, -1, 0], [-1, 0, 1], [0, 1, 1]];
+  var matrix = [[-1, 0, 1], [-2, 0, -2], [-1, 0, 1]];
+  var matrix = [[1, 2, 1], [0, 0, 0], [-1, -2, -1]];
   convolve2D(image, matrix, newImg);
   // ----------- Our reference solution uses 51 lines of code.
   // ----------- STUDENT CODE END ------------
@@ -497,8 +498,8 @@ Filters.edgeFilter = function( image ) {
 Filters.sharpenFilter = function( image ) {
   // ----------- STUDENT CODE BEGIN ------------
   var newImg = image.createImg(image.width, image.height);
-  var vec = [-1, 4, -1];
-  convolve1D(image, vec, newImg);
+  var matrix = [[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]];
+  convolve2D(image, matrix, newImg);
   // ----------- Our reference solution uses 29 lines of code.
   // ----------- STUDENT CODE END ------------
   return newImg;
@@ -675,16 +676,49 @@ Filters.getAlphaFilter = function( backgroundImg, foregroundImg) {
 
 Filters.compositeFilter = function( backgroundImg, foregroundImg ) {
   // ----------- STUDENT CODE BEGIN ------------
+  /* for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+      var backgroundPixel = backgroundImg.getPixel(x, y);
+      var foregroundPixel = foregroundImg.getPixel(x, y);
+
+      pixel.data[0] = alpha * pixel.data[0] + (1-alpha) * dirLuminance;
+      pixel.data[1] = alpha * pixel.data[1] + (1-alpha) * dirLuminance;
+      pixel.data[2] = alpha * pixel.data[2] + (1-alpha) * dirLuminance;
+
+      image.setPixel(x, y, pixel)
+    }
+  }
+  */
   // ----------- Our reference solution uses 14 lines of code.
   // ----------- STUDENT CODE END ------------
   Gui.alertOnce ('compositeFilter is not implemented yet');
   return backgroundImg;
 };
 
+function warp(image, initLine, finalLine) {
+  var dsum =
+  var weightsum = 0;
+  for (var x = 0; x < finalImg.height; x++) {
+    for (var y = 0; y < finalImg.width; y++) {
+
+
+
+    }
+  }
+
+}
+
 Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
   var lines = Parser.parseJson( "images/" + linesFile );
-
   // ----------- STUDENT CODE BEGIN ------------
+  for (var x = 0; x < finalImg.height; x++) {
+    for (var y = 0; y < finalImg.width; y++) {
+
+
+    }
+  }
+
+  lines.initial[i].x0()
   // ----------- Our reference solution uses 83 lines of code.
   // ----------- STUDENT CODE END ------------
   Gui.alertOnce ('morphFilter is not implemented yet');
