@@ -51,7 +51,6 @@ Pixel.prototype.clamp = function() {
 };
 
 Pixel.prototype.rgbToHsl = function() {
-  console.log(this.colorSpace);
   assert(this.colorSpace === "rgb", "input pixel color space must be rgb");
 
   var r = this.data[0],

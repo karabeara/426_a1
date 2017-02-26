@@ -696,7 +696,8 @@ Filters.compositeFilter = function( backgroundImg, foregroundImg ) {
 };
 
 function warp(image, initLine, finalLine) {
-  var dsum =
+	/*
+  var dsum = 0;
   var weightsum = 0;
   for (var x = 0; x < finalImg.height; x++) {
     for (var y = 0; y < finalImg.width; y++) {
@@ -705,12 +706,13 @@ function warp(image, initLine, finalLine) {
 
     }
   }
-
+*/
 }
 
 Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
   var lines = Parser.parseJson( "images/" + linesFile );
   // ----------- STUDENT CODE BEGIN ------------
+  /*
   for (var x = 0; x < finalImg.height; x++) {
     for (var y = 0; y < finalImg.width; y++) {
 
@@ -719,6 +721,7 @@ Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFi
   }
 
   lines.initial[i].x0()
+  */
   // ----------- Our reference solution uses 83 lines of code.
   // ----------- STUDENT CODE END ------------
   Gui.alertOnce ('morphFilter is not implemented yet');
