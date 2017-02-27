@@ -716,8 +716,8 @@ function warp(image, initLine, finalLine) {
     }
   }
 */
-}
-*/
+
+
 Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
   var lines = Parser.parseJson( "images/" + linesFile );
   // ----------- STUDENT CODE BEGIN ------------
