@@ -112,10 +112,18 @@ Filters.samplePixel = function ( image, x, y, mode ) {
     // ----------- Our reference solution uses 19 lines of code.
 	var a = Math.ceil(x)-x;
 	var b = Math.ceil(y)-y;
-	var ccP = image.getPixel(Math.ceil(x), Math.ceil(y));
-	var cfP = image.getPixel(Math.ceil(x), Math.floor(y));
-	var fcP = image.getPixel(Math.floor(x), Math.ceil(y));
-	var ffP = image.getPixel(Math.floor(x), Math.floor(y));
+	var cx = Math.ceil(x);
+	var cy = Math.ceil(y);
+	var fx = Math.floor(x);
+	var fy = Math.floor(y);
+	if(cx >= image.width) cx = image.width-1;
+	if(cy >= image.height) cy = image.height-1;
+	if(fx < 0) fx = 0;
+	if(fy < 0) fy = 0;
+	var ccP = image.getPixel(cx, cy);
+	var cfP = image.getPixel(cx, fy);
+	var fcP = image.getPixel(fx, cy);
+	var ffP = image.getPixel(fx, fy);
 	return new Pixel(
 		(1-a)*(1-b)*ccP.data[0]+(1-a)*b*cfP.data[0]+a*(1-b)*fcP.data[0]+a*b*ffP.data[0],
 		(1-a)*(1-b)*ccP.data[1]+(1-a)*b*cfP.data[1]+a*(1-b)*fcP.data[1]+a*b*ffP.data[1],
@@ -127,24 +135,24 @@ Filters.samplePixel = function ( image, x, y, mode ) {
   } else if ( mode == 'gaussian' ) {
     // ----------- STUDENT CODE BEGIN ------------
     // ----------- Our reference solution uses 37 lines of code.
-	var sigma = 1;
+	var sigma = 0.75;
 	var winR = Math.max(1, Math.round(sigma*3));
 
 	var red_sum = 0;
 	var green_sum = 0;
 	var blue_sum = 0;
 	var weight_sum = 0;
-	for (var v_x = x-winR; v_x < x+winR; v_x++) {
-		for (var v_y = y-winR; v_y < y+winR; v_y++) {
-				  if (v_x >= 0 && v_y >= 0 && v_x < image.width && v_y < image.height) {
-					   var d2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
-					   var weight = Math.exp(-d2/(2*sigma*sigma));
-					   var pixel = image.getPixel(v_x, v_y);
-					   red_sum = red_sum + weight*pixel.data[0];
-					   green_sum = green_sum + weight*pixel.data[1];
-					   blue_sum = blue_sum + weight*pixel.data[2];
-					   weight_sum = weight_sum + weight;
-				  }
+	for (var v_x = Math.floor(x)-winR; v_x < x+winR; v_x++) {
+		for (var v_y = Math.floor(y)-winR; v_y < y+winR; v_y++) {
+			if (v_x >= 0 && v_y >= 0 && v_x < image.width && v_y < image.height) {
+			    var d2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
+			    var weight = Math.exp(-d2/(2*sigma*sigma));
+			    var pixel = image.getPixel(v_x, v_y);
+			    red_sum = red_sum + weight*pixel.data[0];
+			    green_sum = green_sum + weight*pixel.data[1];
+			    blue_sum = blue_sum + weight*pixel.data[2];
+			    weight_sum = weight_sum + weight;
+			}
 		}
 	}
 	return new Pixel(red_sum/weight_sum, green_sum/weight_sum, blue_sum/weight_sum, pixel.a, "rgb");
