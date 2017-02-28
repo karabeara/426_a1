@@ -210,9 +210,9 @@ Filters.contrastFilter = function( image, ratio ) {
     for (var x = 0; x < image.width; x++) {
     for (var y = 0; y < image.height; y++) {
       var pixel = image.getPixel(x, y);
-	     pixel.data[0] = (pixel.data[0] - 0.5) * (Math.tan ((ratio + 1) * pi/4) ) + 0.5;
-	     pixel.data[1] = (pixel.data[1] - 0.5) * (Math.tan ((ratio + 1) * pi/4) ) + 0.5;
-	     pixel.data[2] = (pixel.data[2] - 0.5) * (Math.tan ((ratio + 1) * pi/4) ) + 0.5;
+	     pixel.data[0] = clamp((pixel.data[0] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
+	     pixel.data[1] = clamp((pixel.data[1] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
+	     pixel.data[2] = clamp((pixel.data[2] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
        image.setPixel(x, y, pixel);
     }
   }
@@ -1027,11 +1027,10 @@ Filters.paintFilter = function( image, value ) {
 		//smaller circle if near an edge
 		var edgePixel = edges.getPixel(xC, yC);
 		if (edgePixel.data[2] > 0.5) {
-			var r = Math.max(1, Math.floor(6 * value * Math.random()));
+			var r = Math.max(1, Math.floor(3 * Math.random()));
 		} else {
-			var r = Math.max(1, Math.floor(20 * value * Math.random()));
+			var r = Math.max(1, Math.floor(50 * value * Math.random()));
 		}
-		
 		//draw the circle
 		for (var x = xC - r; x < xC + r; x++) {
 			for (var y = yC - r; y < yC + r; y++) {
@@ -1052,7 +1051,7 @@ Filters.paintFilter = function( image, value ) {
 	for (var xC = 0; xC < image.width; xC++) {
 	 for (var yC = 0; yC < image.height; yC++) {
 		 if (!painted[xC][yC]) {
-			var r = Math.max(1, Math.floor(10 * value * Math.random()));
+			var r = Math.max(1, Math.floor(5 * Math.random()));
 			for (var x = xC - r; x < xC + r; x++) {
 				for (var y = yC - r; y < yC + r; y++) {
 					if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
