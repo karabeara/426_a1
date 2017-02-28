@@ -209,11 +209,11 @@ Filters.contrastFilter = function( image, ratio ) {
 
     for (var x = 0; x < image.width; x++) {
     for (var y = 0; y < image.height; y++) {
-      var pixel = image.getPixel(x, y);
-	     pixel.data[0] = clamp((pixel.data[0] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
-	     pixel.data[1] = clamp((pixel.data[1] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
-	     pixel.data[2] = clamp((pixel.data[2] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
-       image.setPixel(x, y, pixel);
+        var pixel = image.getPixel(x, y);
+	    pixel.data[0] = clamp((pixel.data[0] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
+	    pixel.data[1] = clamp((pixel.data[1] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
+	    pixel.data[2] = clamp((pixel.data[2] - 0.5) * (Math.tan ((ratio + 0.9999) * pi/4) ) + 0.5,0,1);
+        image.setPixel(x, y, pixel);
     }
   }
   // ----------- STUDENT CODE END ------------
@@ -416,7 +416,7 @@ Filters.histogramMatchFilter = function( image, refImg, value ) {
       refBinsB[blue] = refBinsB[blue] + 1;
     }
   }
-  for (var i = 1; i < 255; i+=1) {
+  for (var i = 1; i < 256; i+=1) {
     ourBinsR[i] = ourBinsR[i] + ourBinsR[i-1];
     ourBinsG[i] = ourBinsG[i] + ourBinsG[i-1];
     ourBinsB[i] = ourBinsB[i] + ourBinsB[i-1];
@@ -427,7 +427,7 @@ Filters.histogramMatchFilter = function( image, refImg, value ) {
 
   var imageSize = image.width * image.height * 1.0;
   var refSize = refImg.width * refImg.height * 1.0;
-  for (var i = 1; i < 255; i+=1) {
+  for (var i = 0; i < 256; i+=1) {
     ourBinsR[i] = ourBinsR[i] / imageSize;
     ourBinsG[i] = ourBinsG[i] / imageSize;
     ourBinsB[i] = ourBinsB[i] / imageSize;
@@ -468,10 +468,10 @@ Filters.histogramMatchFilter = function( image, refImg, value ) {
           else if (i == 254) { bRef = 255; break; }
         }
       }
-      pixel.data[0] = rRef / 255.0;
-      pixel.data[1] = gRef / 255.0;
-      pixel.data[2] = bRef / 255.0;
-  		image.setPixel(x, y, pixel);
+      pixel.data[0] = clamp(rRef / 255.0,0,1);
+      pixel.data[1] = clamp(gRef / 255.0,0,1);
+      pixel.data[2] = clamp(bRef / 255.0,0,1);
+  	  image.setPixel(x, y, pixel);
     }
   }
 
