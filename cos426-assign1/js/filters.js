@@ -546,8 +546,35 @@ Filters.bilateralFilter = function( image, sigmaR, sigmaS ) {
   // reference: https://en.wikipedia.org/wiki/Bilateral_filter
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 48 lines of code.
+  var newImg = image.createImg(image.width, image.height);
+  var winR = 3*sigmaR;
+  for (var x = 0; x < image.width; x++) {
+	  for (var y = 0; y < image.height; y++) {
+		    var lum_sum = 0;
+			var weight_sum = 0;
+			var c_pixel = image.getPixel(x,y);
+			var c_hslPixel = c_pixel.rgbToHsl();
+			for (var v_x = x-winR; v_x < x+winR; v_x++) {
+				for (var v_y = y-winR; v_y < y+winR; v_y++) {
+					if (v_x >= 0 && v_y >= 0 &&	v_x < image.width && v_y < image.height) {
+						var pixel = image.getPixel(v_x, v_y);
+						var dx2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
+						var w1 = 1/(sigmaR)*Math.exp(-dx2/(2*sigmaR*sigmaR));
+						var hslPixel = pixel.rgbToHsl();
+						var dl2 = (hslPixel.data[2]-c_hslPixel.data[2])*(hslPixel.data[2]-c_hslPixel.data[2]);
+						var w2 = 1/(sigmaS)*Math.exp(-dl2/(2*sigmaS*sigmaS));
+						lum_sum = lum_sum + w1 * w2 * hslPixel.data[2];
+						weight_sum = weight_sum + w1*w2;
+					}
+				}
+			}
+			
+			var newPixel = new Pixel(c_hslPixel.data[0], c_hslPixel.data[1], lum_sum/weight_sum, c_hslPixel.a, "hsl").hslToRgb();
+			newImg.setPixel(x, y, newPixel);
+	  }
+  }
+  image = newImg;
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('bilateralFilter is not implemented yet');
   return image;
 };
 
