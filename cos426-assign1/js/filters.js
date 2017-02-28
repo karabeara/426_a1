@@ -698,42 +698,200 @@ Filters.compositeFilter = function( backgroundImg, foregroundImg ) {
   //Gui.alertOnce ('compositeFilter is not implemented yet');
   return backgroundImg;
 };
-/*
-function warp(image, initLine, finalLine) {
-<<<<<<< Updated upstream
-	/*
-  var dsum = 0;
-=======
 
-  var dsum =
->>>>>>> Stashed changes
-  var weightsum = 0;
-  for (var x = 0; x < finalImg.height; x++) {
-    for (var y = 0; y < finalImg.width; y++) {
+function warpBad(image, lines, isInitial) {
+  var newImg = image.createImg(image.width, image.height);
 
+  for (var Xx = 0; Xx < image.width; Xx++) {
+    for (var Xy = 0; Xy < image.height; Xy++) {
+      var dSumX = 0;
+      var dSumY = 0;
+      var weightSum = 0;
+      var Px_prime, Py_prime, Qx_prime, Qy_prime;
+      var Xx_prime, Xy_prime;
 
+      // for each line PiQi
+      for (var i = 1; i < 10; i++) {
+        var Px, Py, Qx, Qy;
+        if (isInitial == 1) {
+          Px_prime = lines.final[i].x0;
+          Py_prime = lines.final[i].y0;
+          Qx_prime = lines.final[i].x1;
+          Qy_prime = lines.final[i].y1;
+          Px = lines.initial[i].x0;
+          Py = lines.initial[i].y0;
+          Qx = lines.initial[i].x1;
+          Qy = lines.initial[i].y1;
+        } else {
+          Px_prime = lines.initial[i].x0;
+          Py_prime = lines.initial[i].y0;
+          Qx_prime = lines.initial[i].x1;
+          Qy_prime = lines.initial[i].y1;
+          Px = lines.final[i].x0;
+          Py = lines.final[i].y0;
+          Qx = lines.final[i].x1;
+          Qy = lines.final[i].y1;
+        }
 
+        // calculate u based on PiQi
+        var XP_x = Xx - Px;
+        var XP_y = Xy - Py;
+        var QP_x = Qx - Px;
+        var QP_y = Qy - Py;
+        var QP_mag = Math.sqrt( Math.pow(Px - Qx, 2) + Math.pow(Py - Qy, 2) );
+        var QP_mag_prime = Math.sqrt( Math.pow(Px_prime - Qx_prime, 2) + Math.pow(Py_prime - Qy_prime, 2) );
+        var u = ((XP_x * QP_x) + (XP_y * QP_y)) / Math.pow(QP_mag, 2);
+
+        // calculate v based on PiQi
+        var v = ( (XP_x * QP_y * -1) + (XP_y * QP_x) ) / Math.pow(QP_mag, 2);
+
+        // calculate X_prime based on u, v, and Pi_Qi_
+        var QP_x_prime = Qx_prime - Px_prime;
+        var QP_y_prime = Qy_prime - Py_prime;
+        Xx_prime = Px_prime + (u * QP_x_prime) + ((v * QP_y_prime * -1) / Math.pow(QP_mag_prime, 2));
+        Xy_prime = Py_prime + (u * QP_y_prime) + ((v * QP_x_prime) / Math.pow(QP_mag_prime, 2));
+
+        // calculate displacement Di = X_prime - X for this lines
+        var DiX = Math.abs(Xx_prime - Xx);
+        var DiY = Math.abs(Xy_prime - Xy);
+
+        // compute distance, d = shortest distance from X to PiQi
+        var d;
+        if (u > 0 && u < 1) { d = Math.abs(v); }
+        else if (u < 0) { d = Math.sqrt( Math.pow(Px - Xx, 2) + Math.pow(Py - Xy, 2) ); }
+        else if (u > 1) { d = Math.sqrt( Math.pow(Qx - Xx, 2) + Math.pow(Qy - Xy, 2) ); }
+
+        // compute weight, w = ( (length^p) / (a+d) )^b
+        var p = 0.5;
+        var a = 0.01;
+        var b = 2;
+        var w = Math.pow((Math.pow(QP_mag, p) / (a + d)), b);
+
+        dSumX = dSumX + DiX * w;
+        dSumX = dSumX + DiY * w;
+        weightSum = weightSum + w;
+      }
+
+      Xx_prime = Math.round(Xx + (dSumX / weightSum));
+      Xy_prime = Math.round(Xy + (dSumY / weightSum));
+
+      var newPixel = image.getPixel(Xx_prime, Xx_prime);
+      newImg.setPixel(Xx, Xy, newPixel);
     }
   }
-*/
+
+  return newImg;
 }
-*/
+
+function warp(image, lines, isInitial) {
+  var newImg = image.createImg(image.width, image.height);
+
+  for (var Xx = 0; Xx < image.width; Xx++) {
+    for (var Xy = 0; Xy < image.height; Xy++) {
+      var dSumX = 0;
+      var dSumY = 0;
+      var weightSum = 0;
+      var Px_prime, Py_prime, Qx_prime, Qy_prime;
+      var Xx_prime, Xy_prime;
+
+      // for each line PiQi
+      for (var i = 1; i < 10; i++) {
+        var Px, Py, Qx, Qy;
+        if (isInitial == 1) {
+          Px_prime = lines.final[i].x0;
+          Py_prime = lines.final[i].y0;
+          Qx_prime = lines.final[i].x1;
+          Qy_prime = lines.final[i].y1;
+          Px = lines.initial[i].x0;
+          Py = lines.initial[i].y0;
+          Qx = lines.initial[i].x1;
+          Qy = lines.initial[i].y1;
+        } else {
+          Px_prime = lines.initial[i].x0;
+          Py_prime = lines.initial[i].y0;
+          Qx_prime = lines.initial[i].x1;
+          Qy_prime = lines.initial[i].y1;
+          Px = lines.final[i].x0;
+          Py = lines.final[i].y0;
+          Qx = lines.final[i].x1;
+          Qy = lines.final[i].y1;
+        }
+
+        // calculate u based on PiQi
+        var XP_x = Xx - Px;
+        var XP_y = Xy - Py;
+        var QP_x = Qx - Px;
+        var QP_y = Qy - Py;
+        var QP_mag = Math.sqrt( Math.pow(Px - Qx, 2) + Math.pow(Py - Qy, 2) );
+        var QP_mag_prime = Math.sqrt( Math.pow(Px_prime - Qx_prime, 2) + Math.pow(Py_prime - Qy_prime, 2) );
+        var u = ((XP_x * QP_x) + (XP_y * QP_y)) / Math.pow(QP_mag, 2);
+
+        // calculate v based on PiQi
+        var v = ( (XP_x * QP_y * -1) + (XP_y * QP_x) ) / Math.pow(QP_mag, 2);
+
+        // calculate X_prime based on u, v, and Pi_Qi_
+        var QP_x_prime = Qx_prime - Px_prime;
+        var QP_y_prime = Qy_prime - Py_prime;
+        Xx_prime = Px_prime + (u * QP_x_prime) + ((v * QP_y_prime * -1) / Math.pow(QP_mag_prime, 2));
+        Xy_prime = Py_prime + (u * QP_y_prime) + ((v * QP_x_prime) / Math.pow(QP_mag_prime, 2));
+
+        // calculate displacement Di = X_prime - X for this lines
+        var DiX = Math.abs(Xx_prime - Xx);
+        var DiY = Math.abs(Xy_prime - Xy);
+
+        // compute distance, d = shortest distance from X to PiQi
+        var d;
+        if (u > 0 && u < 1) { d = Math.abs(v); }
+        else if (u < 0) { d = Math.sqrt( Math.pow(Px - Xx, 2) + Math.pow(Py - Xy, 2) ); }
+        else if (u > 1) { d = Math.sqrt( Math.pow(Qx - Xx, 2) + Math.pow(Qy - Xy, 2) ); }
+
+        // compute weight, w = ( (length^p) / (a+d) )^b
+        var p = 0.5;
+        var a = 0.01;
+        var b = 2;
+        var w = Math.pow((Math.pow(QP_mag, p) / (a + d)), b);
+
+        dSumX = dSumX + DiX * w;
+        dSumX = dSumX + DiY * w;
+        weightSum = weightSum + w;
+      }
+
+      Xx_prime = Math.round(Xx + (dSumX / weightSum));
+      Xy_prime = Math.round(Xy + (dSumY / weightSum));
+
+      var newPixel = image.getPixel(Xx_prime, Xx_prime);
+      newImg.setPixel(Xx, Xy, newPixel);
+    }
+  }
+
+  return newImg;
+}
+
 Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
   var lines = Parser.parseJson( "images/" + linesFile );
   // ----------- STUDENT CODE BEGIN ------------
-  /*
-  for (var x = 0; x < finalImg.height; x++) {
-    for (var y = 0; y < finalImg.width; y++) {
+  var image = finalImg.createImg(finalImg.width, finalImg.height);
+  var initialImg2 = warp(initialImg, lines, 1);
+  var finalImg2 = warp(finalImg, lines, 0);
 
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
 
+      var initialPixel = initialImg2.getPixel(x, y);
+      var finalPixel = finalImg2.getPixel(x, y);
+
+      var r = alpha * finalPixel.data[0] + (1-alpha) * initialPixel.data[0];
+      var g = alpha * finalPixel.data[1] + (1-alpha) * initialPixel.data[1];
+      var b = alpha * finalPixel.data[2] + (1-alpha) * initialPixel.data[2];
+      var newPixel = new Pixel(r, g, b, finalImg.a, "rgb");
+
+      image.setPixel(x, y, newPixel);
     }
   }
 
-  lines.initial[i].x0()
-  */
   // ----------- Our reference solution uses 83 lines of code.
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('morphFilter is not implemented yet');
+  //Gui.alertOnce ('morphFilter is not implemented yet');
   return image;
 };
 
@@ -818,6 +976,118 @@ Filters.xDoGFilter = function( image, value ) {
   // ----------- Our reference solution uses 60 lines of code.
   // ----------- STUDENT CODE END ------------
   Gui.alertOnce ('xDoGFilter is not implemented yet');
+  return image;
+};
+
+function warpBad(image, lines, isInitial) {
+  var newImg = image.createImg(image.width, image.height);
+
+  for (var Xx = 0; Xx < image.width; Xx++) {
+    for (var Xy = 0; Xy < image.height; Xy++) {
+      var dSumX = 0;
+      var dSumY = 0;
+      var weightSum = 0;
+      var Px_prime, Py_prime, Qx_prime, Qy_prime;
+      var Xx_prime, Xy_prime;
+
+      // for each line PiQi
+      for (var i = 1; i < 10; i++) {
+        var Px, Py, Qx, Qy;
+        if (isInitial == 1) {
+          Px_prime = lines.final[i].x0;
+          Py_prime = lines.final[i].y0;
+          Qx_prime = lines.final[i].x1;
+          Qy_prime = lines.final[i].y1;
+          Px = lines.initial[i].x0;
+          Py = lines.initial[i].y0;
+          Qx = lines.initial[i].x1;
+          Qy = lines.initial[i].y1;
+        } else {
+          Px_prime = lines.initial[i].x0;
+          Py_prime = lines.initial[i].y0;
+          Qx_prime = lines.initial[i].x1;
+          Qy_prime = lines.initial[i].y1;
+          Px = lines.final[i].x0;
+          Py = lines.final[i].y0;
+          Qx = lines.final[i].x1;
+          Qy = lines.final[i].y1;
+        }
+
+        // calculate u based on PiQi
+        var XP_x = Xx - Px;
+        var XP_y = Xy - Py;
+        var QP_x = Qx - Px;
+        var QP_y = Qy - Py;
+        var QP_mag = Math.sqrt( Math.pow(Px - Qx, 2) + Math.pow(Py - Qy, 2) );
+        var QP_mag_prime = Math.sqrt( Math.pow(Px_prime - Qx_prime, 2) + Math.pow(Py_prime - Qy_prime, 2) );
+        var u = ((XP_x * QP_x) + (XP_y * QP_y)) / Math.pow(QP_mag, 2);
+
+        // calculate v based on PiQi
+        var v = ( (XP_x * QP_y * -1) + (XP_y * QP_x) ) / Math.pow(QP_mag, 2);
+
+        // calculate X_prime based on u, v, and Pi_Qi_
+        var QP_x_prime = Qx_prime - Px_prime;
+        var QP_y_prime = Qy_prime - Py_prime;
+        Xx_prime = Px_prime + (u * QP_x_prime) + ((v * QP_y_prime * -1) / Math.pow(QP_mag_prime, 2));
+        Xy_prime = Py_prime + (u * QP_y_prime) + ((v * QP_x_prime) / Math.pow(QP_mag_prime, 2));
+
+        // calculate displacement Di = X_prime - X for this lines
+        var DiX = Math.abs(Xx_prime - Xx);
+        var DiY = Math.abs(Xy_prime - Xy);
+
+        // compute distance, d = shortest distance from X to PiQi
+        var d;
+        if (u > 0 && u < 1) { d = Math.abs(v); }
+        else if (u < 0) { d = Math.sqrt( Math.pow(Px - Xx, 2) + Math.pow(Py - Xy, 2) ); }
+        else if (u > 1) { d = Math.sqrt( Math.pow(Qx - Xx, 2) + Math.pow(Qy - Xy, 2) ); }
+
+        // compute weight, w = ( (length^p) / (a+d) )^b
+        var p = 0.5;
+        var a = 0.01;
+        var b = 2;
+        var w = Math.pow((Math.pow(QP_mag, p) / (a + d)), b);
+
+        dSumX = dSumX + DiX * w;
+        dSumX = dSumX + DiY * w;
+        weightSum = weightSum + w;
+      }
+
+      Xx_prime = Math.round(Xx + (dSumX / weightSum));
+      Xy_prime = Math.round(Xy + (dSumY / weightSum));
+
+      var newPixel = image.getPixel(Xx_prime, Xx_prime);
+      newImg.setPixel(Xx, Xy, newPixel);
+    }
+  }
+
+  return newImg;
+}
+
+Filters.morphFilterBad = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
+  var lines = Parser.parseJson( "images/" + linesFile );
+  // ----------- STUDENT CODE BEGIN ------------
+  var image = finalImg.createImg(finalImg.width, finalImg.height);
+  var initialImg2 = warp(initialImg, lines, 1);
+  var finalImg2 = warp(finalImg, lines, 0);
+
+  for (var x = 0; x < image.width; x++) {
+    for (var y = 0; y < image.height; y++) {
+
+      var initialPixel = initialImg2.getPixel(x, y);
+      var finalPixel = finalImg2.getPixel(x, y);
+
+      var r = alpha * finalPixel.data[0] + (1-alpha) * initialPixel.data[0];
+      var g = alpha * finalPixel.data[1] + (1-alpha) * initialPixel.data[1];
+      var b = alpha * finalPixel.data[2] + (1-alpha) * initialPixel.data[2];
+      var newPixel = new Pixel(r, g, b, finalImg.a, "rgb");
+
+      image.setPixel(x, y, newPixel);
+    }
+  }
+
+  // ----------- Our reference solution uses 83 lines of code.
+  // ----------- STUDENT CODE END ------------
+  //Gui.alertOnce ('morphFilter is not implemented yet');
   return image;
 };
 
