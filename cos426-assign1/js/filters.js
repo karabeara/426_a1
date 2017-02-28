@@ -1027,9 +1027,9 @@ Filters.paintFilter = function( image, value ) {
 		//smaller circle if near an edge
 		var edgePixel = edges.getPixel(xC, yC);
 		if (edgePixel.data[2] > 0.5) {
-			var r = Math.max(1, Math.floor(3 * Math.random()));
+			var r = Math.max(1, Math.floor(6 * value * Math.random()));
 		} else {
-			var r = Math.max(1, Math.floor(10 * Math.random()));
+			var r = Math.max(1, Math.floor(20 * value * Math.random()));
 		}
 		
 		//draw the circle
@@ -1052,7 +1052,7 @@ Filters.paintFilter = function( image, value ) {
 	for (var xC = 0; xC < image.width; xC++) {
 	 for (var yC = 0; yC < image.height; yC++) {
 		 if (!painted[xC][yC]) {
-			var r = Math.max(1, Math.floor(5 * Math.random()));
+			var r = Math.max(1, Math.floor(10 * value * Math.random()));
 			for (var x = xC - r; x < xC + r; x++) {
 				for (var y = yC - r; y < yC + r; y++) {
 					if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
