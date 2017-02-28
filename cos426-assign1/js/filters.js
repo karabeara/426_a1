@@ -814,8 +814,6 @@ function warpBad(image, lines, isInitial) {
       newImg.setPixel(Xx, Xy, newPixel);
     }
   }
-<<<<<<< HEAD
-
   return newImg;
 }
 
@@ -902,10 +900,6 @@ function warp(image, lines, isInitial) {
 
   return newImg;
 }
-=======
-*/
-
->>>>>>> origin/master
 
 Filters.morphFilter = function( initialImg, finalImg, alpha, sampleMode, linesFile ) {
   var lines = Parser.parseJson( "images/" + linesFile );
