@@ -101,6 +101,13 @@ function tupleComparator(l, pix) {
    if (l[0] > pix[0]) return 1;
    return 0;
  }
+ 
+ function blend(pixel1, pixel2) {
+	 var r = (pixel1.data[0] + pixel2.data[0] ) / 2;
+	 var g = (pixel1.data[1] + pixel2.data[1] ) / 2;
+	 var b = (pixel1.data[2] + pixel2.data[2] ) / 2;
+	 return new Pixel(r, g, b, pixel1.a, pixel1.type);
+ }
 
 // ----------- STUDENT CODE END ------------
 
@@ -999,8 +1006,45 @@ Filters.paintFilter = function( image, value ) {
   // http://mrl.nyu.edu/publications/painterly98/hertzmann-siggraph98.pdf
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 52 lines of code.
+  var newImg = image.createImg(image.width, image.height);
+  
+  var painted = [];
+  for (var x = 0; x < image.width; x++) {
+     painted[x] = [];
+	 for (var y = 0; y < image.height; y++) {
+		 painted[x][y] = false;
+	 }
+  }
+  
+  var iterations = image.width * image.height / 2;
+  for (var i = 0; i < iterations; i++) {
+		var xC = Math.floor(image.width * Math.random());
+		var yC = Math.floor(image.height * Math.random());
+		var r = Math.floor(5 * Math.random());
+		for (var x = xC - r; x < xC + r; x++) {
+			for (var y = yC - r; y < yC + r; y++) {
+				if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
+					if ((x - xC) * (x - xC) + (y - yC) * (y - yC) < r * r) {
+						if (painted[x][y]) {
+							newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
+						} else
+							newImg.setPixel(x, y, image.getPixel(xC, yC));
+						painted[x][y] = true;
+					}
+				}
+			}
+		}
+    }
+	
+	for (var x = 0; x < image.width; x++) {
+	 for (var y = 0; y < image.height; y++) {
+		 if (painted[x][y] == false) {
+			 newImg.setPixel(x, y, image.getPixel(x, y));
+		 }
+	 }
+  }
+  image = newImg;
   // ----------- STUDENT CODE END ------------
-  Gui.alertOnce ('paintFilter is not implemented yet');
   return image;
 };
 
