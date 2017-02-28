@@ -1007,6 +1007,7 @@ Filters.paintFilter = function( image, value ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 52 lines of code.
   var newImg = image.createImg(image.width, image.height);
+  var edges = Filters.gaussianFilter(Filters.edgeFilter(image), 3);
   
   var painted = [];
   for (var x = 0; x < image.width; x++) {
@@ -1016,11 +1017,22 @@ Filters.paintFilter = function( image, value ) {
 	 }
   }
   
-  var iterations = image.width * image.height / 2;
+  var iterations = image.width * image.height / 6;
   for (var i = 0; i < iterations; i++) {
+	  
+		//center of circle to draw
 		var xC = Math.floor(image.width * Math.random());
 		var yC = Math.floor(image.height * Math.random());
-		var r = Math.floor(5 * Math.random());
+		
+		//smaller circle if near an edge
+		var edgePixel = edges.getPixel(xC, yC);
+		if (edgePixel.data[2] > 0.5) {
+			var r = Math.max(1, Math.floor(3 * Math.random()));
+		} else {
+			var r = Math.max(1, Math.floor(10 * Math.random()));
+		}
+		
+		//draw the circle
 		for (var x = xC - r; x < xC + r; x++) {
 			for (var y = yC - r; y < yC + r; y++) {
 				if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
@@ -1028,7 +1040,7 @@ Filters.paintFilter = function( image, value ) {
 						if (painted[x][y]) {
 							newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
 						} else
-							newImg.setPixel(x, y, image.getPixel(xC, yC));
+							newImg.setPixel(x, y, blend(image.getPixel(xC, yC), image.getPixel(x, y)));
 						painted[x][y] = true;
 					}
 				}
@@ -1036,10 +1048,24 @@ Filters.paintFilter = function( image, value ) {
 		}
     }
 	
-	for (var x = 0; x < image.width; x++) {
-	 for (var y = 0; y < image.height; y++) {
-		 if (painted[x][y] == false) {
-			 newImg.setPixel(x, y, image.getPixel(x, y));
+	//fill in empty spaces
+	for (var xC = 0; xC < image.width; xC++) {
+	 for (var yC = 0; yC < image.height; yC++) {
+		 if (!painted[xC][yC]) {
+			var r = Math.max(1, Math.floor(5 * Math.random()));
+			for (var x = xC - r; x < xC + r; x++) {
+				for (var y = yC - r; y < yC + r; y++) {
+					if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
+						if ((x - xC) * (x - xC) + (y - yC) * (y - yC) < r * r) {
+							if (painted[x][y]) {
+								newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
+							} else
+								newImg.setPixel(x, y, blend(image.getPixel(x,y) ,image.getPixel(xC, yC)));
+							painted[x][y] = true;
+						}
+					}
+				}
+			}
 		 }
 	 }
   }
