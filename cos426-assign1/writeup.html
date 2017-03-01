@@ -76,7 +76,7 @@ Brush draws a circle at the point of a mouse click with a specified color and ra
 
 
 <p><hr><p><a name='Contrast'></a><h2>Contrast</h2><p><hr><p>
-(Your description of your implentation of Contrast goes here...)
+Makes dark pixels darker and brighter ones brighter.
 
 <br>
 
@@ -87,7 +87,7 @@ Brush draws a circle at the point of a mouse click with a specified color and ra
 <br><img src='results/contrast-1.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Contrast=-1'>Push_Image=leaves.jpg&Contrast=-1</a>
 
 <p><hr><p><a name='Gamma'></a><h2>Gamma</h2><p><hr><p>
-(Your description goes here)
+Adjusts the colors of an image in a nonlinear fashion. Originally used to deal with physical restrictions in capturing and displaying images.
 
 <br>
 
@@ -182,13 +182,14 @@ Changes the value of a pixel to be the median of values within a given window. T
 <br><img src='results/median6.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Median=6'>Push_Image=leaves.jpg&Median=6</a>
 
 <p><hr><p><a name='Bilateral+filter'></a><h2>Bilateral filter</h2><p><hr><p>
-(Your description of your implentation of Bilateral filter goes here...)
+A type of gaussian blur that preserves edges. It works by weighting pixels of a similar luminance higher than pixels with different luminance in a gaussian manner. Distance is taken into account too like a normal gaussian filter.
+This runs slow on my computer. The second image is a screenshot from Microsoft Edge (where it runs faster, but has no ability to save the image directly).
+<br>
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br><img src='results/bilateral4_2.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Bilateral=4;2'>Push_Image=mesa.jpg&Bilateral=4;2</a>
 
-<br><img src='results/placeholder.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Bilateral=4;2'>Push_Image=mesa.jpg&Bilateral=4;2</a>
 
-<br><img src='results/placeholder.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Bilateral=5;3'>Push_Image=mesa.jpg&Bilateral=5;3</a>
+<br><img src='results/bilateral5_3.jpg'><br> <a href='batch.html?Push_Image=mesa.jpg&Bilateral=5;3'>Push_Image=mesa.jpg&Bilateral=5;3</a>
 
 <!--
 <p><hr><p><a name='Quantize'></a><h2>Quantize</h2><p><hr><p>
@@ -264,7 +265,7 @@ Rotates an image.
 <p><hr><p><a name='Swirl'></a><h2>Swirl</h2><p><hr><p>
 Rotates the outside of an image more than the inside to give a neat effect. 
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 <br><img src='results/swirl_gauss.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Swirl=6.28318530718'>Push_Image=mesa.jpg&Swirl=6.28318530718;gaussian</a>
 
 <br><img src='results/swirl2_pt.png'><br> <a href='batch.html?Push_Image=town.jpg&Swirl=4.71238898038;point'>Push_Image=town.jpg&Swirl=4.71238898038;point</a>
@@ -274,11 +275,13 @@ Rotates the outside of an image more than the inside to give a neat effect.
 <br><img src='results/swirl2_gauss.png'><br> <a href='batch.html?Push_Image=town.jpg&Swirl=4.71238898038;gaussian'>Push_Image=town.jpg&Swirl=4.71238898038;gaussian</a>
 
 <p><hr><p><a name='Composite'></a><h2>Composite</h2><p><hr><p>
-(Your description of your implentation of Composite goes here...)
+Blends images based on alpha channel with a background and foreground image.
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=man.jpg&Push_Image=doge.jpg&Push_Image=alpha.png&Get_Alpha=&Composite='>Push_Image=man.jpg&Push_Image=doge.jpg&Push_Image=alpha.png&Get_Alpha=&Composite=</a>
+<br>
 
-<br><img src='results/placeholder.png'><p><hr><p>
+<br><img src='results/composit.png'><p><hr><p><br> <a href='batch.html?Push_Image=man.jpg&Push_Image=doge.jpg&Push_Image=alpha.png&Get_Alpha=&Composite='>Push_Image=man.jpg&Push_Image=doge.jpg&Push_Image=alpha.png&Get_Alpha=&Composite=</a>
+
+
 
 <a name='Morph'></a><h2>Morph</h2><p><hr><p>
 Changes an image shape to match another image (using user selected lines), while blending the colors of the two images together.
