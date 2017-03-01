@@ -554,54 +554,28 @@ Filters.bilateralFilter = function( image, sigmaR, sigmaS ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 48 lines of code.
   var newImg = image.createImg(image.width, image.height);
-  var winR = Math.round(Math.max(sigmaR,sigmaS)*2 ) + 1;
- /*
-  var w1s = [];
-  for (var i_x = -winR; i_x <= winR; i_x++) {
-	 w1s[i_x] = [];
-	 for (var i_y = -winR; i_y <= winR; i_y++) {
-		 var d2 =(i_x)*(i_x) + (i_y)*(i_y);
-		 w1s[i_x][i_y] = 1/(sigmaR)*Math.exp(-d2/(2*sigmaR*sigmaR));
-	 }
-  }
-  var w2s = [];
-  for (var i_l = 0; i_l < 256; i_l++) {
-	  w2s[i_l] = 1/(sigmaS)*Math.exp(-(i_l/255)/(2*sigmaS*sigmaS));
-  }
-  */
+  var winR = 2*Math.max(sigmaR, sigmaS);
   for (var x = 0; x < image.width; x++) {
 	  for (var y = 0; y < image.height; y++) {
-		//	var red_sum = 0;
-		//	var green_sum = 0;
-		//	var blue_sum = 0;
+		    var lum_sum = 0;
 			var weight_sum = 0;
-			var lum_sum = 0;
-		//	var red_weight_sum = 0;
-		//	var blue_weight_sum = 0;
-		//	var green_weight_sum = 0;
 			var c_pixel = image.getPixel(x,y);
-			for (var v_x = Math.max(x-winR, 0); v_x < Math.min(x+winR, image.width-1); v_x++) {
-				for (var v_y = Math.max(y-winR, 0); v_y < Math.min(y+winR, image.height-1); v_y++) {
-					var pixel = image.getPixel(v_x, v_y);
-					var dx2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
-					var dr2 = (pixel.data[0]-c_pixel.data[0])*(pixel.data[0]-c_pixel.data[0]);
-					var db2 = (pixel.data[1]-c_pixel.data[1])*(pixel.data[1]-c_pixel.data[1]);
-					var dg2 = (pixel.data[2]-c_pixel.data[2])*(pixel.data[2]-c_pixel.data[2]);
-
-					var w = Math.exp(-dx2/(2*sigmaR*sigmaR) - (dr2+db2+dg2)/(6*sigmaS*sigmaS));
-			//		var w_green = Math.exp(-dx2/(2*sigmaR*sigmaR) - dg2/(2*sigmaS*sigmaS));
-			//		var w_blue = Math.exp(-dx2/(2*sigmaR*sigmaR) - db2/(2*sigmaS*sigmaS));
-			//		red_sum = red_sum + pixel.data[0]*w_red;
-			//		green_sum = green_sum + pixel.data[1]*w_green;
-			//		blue_sum = blue_sum + pixel.data[2]*w_blue;
-					var hsl = pixel.rgbToHsl();
-					weight_sum = weight_sum + w;
-					lum_sum = lum_sum + w * hsl.data[2];
-			//		green_weight_sum = green_weight_sum + w_green;
-			//		blue_weight_sum = blue_weight_sum + w_blue;
+			var c_hslPixel = c_pixel.rgbToHsl();
+			for (var v_x = x-winR; v_x < x+winR; v_x++) {
+				for (var v_y = y-winR; v_y < y+winR; v_y++) {
+					if (v_x >= 0 && v_y >= 0 &&	v_x < image.width && v_y < image.height) {
+						var pixel = image.getPixel(v_x, v_y);
+						var dx2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
+						var w1 = 1/(sigmaR)*Math.exp(-dx2/(2*sigmaR*sigmaR));
+						var hslPixel = pixel.rgbToHsl();
+						var dl2 = (hslPixel.data[2]-c_hslPixel.data[2])*(hslPixel.data[2]-c_hslPixel.data[2]);
+						var w2 = 1/(sigmaS)*Math.exp(-dl2/(2*sigmaS*sigmaS));
+						lum_sum = lum_sum + w1 * w2 * hslPixel.data[2];
+						weight_sum = weight_sum + w1*w2;
+					}
 				}
 			}
-
+			
 			var newPixel = new Pixel(c_hslPixel.data[0], c_hslPixel.data[1], lum_sum/weight_sum, c_hslPixel.a, "hsl").hslToRgb();
 			newImg.setPixel(x, y, newPixel);
 	  }

@@ -29,20 +29,20 @@
 <li>(0.5) <a href='#Edge+detect'>Edge detect</a></li>
 <li>(1.0) <a href='#Median+filter'>Median filter</a></li>
 <li>(2.0) <a href='#Bilateral+filter'>Bilateral filter</a></li>
-<li>(0.5) <a href='#Quantize'>Quantize</a></li>
+<!--<li>(0.5) <a href='#Quantize'>Quantize</a></li>
 <li>(0.5) <a href='#Random+dither'>Random dither</a></li>
 <li>(2.0) <a href='#Ordered+dither'>Ordered dither</a></li>
-<li>(2.0) <a href='#Floyd-Steinberg+dither'>Floyd-Steinberg dither</a></li>
+<li>(2.0) <a href='#Floyd-Steinberg+dither'>Floyd-Steinberg dither</a></li> -->
 <li>(1.0) <a href='#Sampling'>Sampling</a></li>
 <li>(0.5) <a href='#Translate'>Translate</a></li>
 <li>(0.5) <a href='#Scale'>Scale</a></li>
 <li>(1.5) <a href='#Rotate'>Rotate</a></li>
 <li>(1.5) <a href='#Swirl'>Swirl</a></li>
 <li>(1.0) <a href='#Composite'>Composite</a></li>
-<li>(3.0) <a href='#Morph'>Morph</a></li>
-<li>(3.0) <a href='#Palette'>Palette</a></li>
-<li>(4.0) <a href='#Paint-by-numbers'>Paint-by-numbers</a></li>
-<li>(4.0) <a href='#xDoG'>xDoG</a></li>
+<li>(3.0) <a href='#Morph'>Morph</a></li> <!--
+<li>(3.0) <a href='#Palette'>Palette</a></li> -->
+<li>(4.0) <a href='#Paint-by-numbers'>Paint-by-numbers</a></li> <!--
+<li>(4.0) <a href='#xDoG'>xDoG</a></li> -->
 <li>(1.0) <a href='#Art+Contest'>Art Contest</a></li>
         </ul></div>
 
@@ -107,7 +107,7 @@ This darkens the periphery of the image but keeps the inside normal brightness. 
 <br><img src='results/vignette0_0.75.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Vignette=0;0.75'>Push_Image=mesa.jpg&Vignette=0;0.75</a>
 
 <p><hr><p><a name='Histogram+equalization'></a><h2>Histogram equalization</h2><p><hr><p>
-Splits the image into bins based on luminance and adjusts the luminances to make the image have a flat histogram. 
+Splits the image into bins based on luminance and adjusts the luminances to make the image have a flat histogram. Each luminance value is equally represented in the final image.
 
 <br>
 
@@ -116,7 +116,7 @@ Splits the image into bins based on luminance and adjusts the luminances to make
 <br><img src='results/histogram_leaves.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Histogram_Equalization='>Push_Image=leaves.jpg&Histogram_Equalization=</a>
 
 <p><hr><p><a name='Saturation'></a><h2>Saturation</h2><p><hr><p>
-(Your description of your implentation of Saturation goes here...)
+Interpolates, (and extrapolates) an image with a greyscale version of itself. This can either increase the saturation of the colors or dull them closer to grey.
 
 <br>
 
@@ -125,16 +125,16 @@ Splits the image into bins based on luminance and adjusts the luminances to make
 <br><img src='results/saturation-0.5.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Saturation=-0.5'>Push_Image=leaves.jpg&Saturation=-0.5</a>
 
 <p><hr><p><a name='White+balance'></a><h2>White balance</h2><p><hr><p>
-(Your description of your implentation of White balance goes here...)
+Adjusts the colors so a given color is remapped to white (using lms color space).
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/whitebalance.png'><br> <a href='batch.html?Push_Image=town.jpg&White_Balance=[0.5,0.5,0.5,1]'>Push_Image=town.jpg&White_Balance=[0.5,0.5,0.5,1]</a>
 
 <p><hr><p><a name='Histogram+matching'></a><h2>Histogram matching</h2><p><hr><p>
 Splits the two images into "bins" by color (rgb) and adjusts the colors of the second image to match the histogram of bins of the first image.
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 <br><img src='results/match_leaves_flowers.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Push_Image=flower.jpg&Histogram_Match=0.5'>Push_Image=leaves.jpg&Push_Image=flower.jpg&Histogram_Match=0.5</a>
 
 
@@ -169,9 +169,9 @@ Finds edges where color changes quickly. Works with a two-dimentional convolve m
 
 
 <p><hr><p><a name='Median+filter'></a><h2>Median filter</h2><p><hr><p>
-(Your description of your implentation of Median filter goes here...)
+Changes the value of a pixel to be the median of values within a given window. This removes noise.
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/median2.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Median=2'>Push_Image=leaves.jpg&Median=2</a>
 
@@ -229,9 +229,9 @@ The third way is gaussian, which takes a gaussian weighted average of nearby pix
 <br>
 
 <p><hr><p><a name='Translate'></a><h2>Translate</h2><p><hr><p>
-(Your description of your implentation of Translate goes here...)
+Moves an image.
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/translate_pt1.png'><br> <a href='batch.html?Push_Image=flower.jpg&Translate=-317;-182;point'>Push_Image=flower.jpg&Translate=-317;-182;point</a>
 
@@ -240,9 +240,9 @@ The third way is gaussian, which takes a gaussian weighted average of nearby pix
 <br><img src='results/translate_gauss.png'><br> <a href='batch.html?Push_Image=flower.jpg&Translate=-317;-182;gaussian'>Push_Image=flower.jpg&Translate=-317;-182;gaussian</a>
 
 <p><hr><p><a name='Scale'></a><h2>Scale</h2><p><hr><p>
-(Your description of your implentation of Scale goes here...)
+Shrinks or grows an image.
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/scale_pt.png'><br><br> <a href='batch.html?Push_Image=mesa.jpg&Scale=2.03;point'>Push_Image=mesa.jpg&Scale=2.03;point</a>
 
@@ -251,9 +251,9 @@ The third way is gaussian, which takes a gaussian weighted average of nearby pix
 <br><img src='results/scale_gauss.png'> <a href='batch.html?Push_Image=mesa.jpg&Scale=2.03;gaussian'>Push_Image=mesa.jpg&Scale=2.03;gaussian</a>
 
 <p><hr><p><a name='Rotate'></a><h2>Rotate</h2><p><hr><p>
-(Your description of your implentation of Rotate goes here...)
+Rotates an image.
 
-<br>You can include as many results as you want, but please at least include the following results:<br>
+<br>
 
 <br><img src='results/rotate_pt.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Rotate=0.628318530718;point'>Push_Image=mesa.jpg&Rotate=0.628318530718;point</a>
 
@@ -262,7 +262,7 @@ The third way is gaussian, which takes a gaussian weighted average of nearby pix
 <br><img src='results/rotate_gauss.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Rotate=0.628318530718;gaussian'>Push_Image=mesa.jpg&Rotate=0.628318530718;gaussian</a>
 
 <p><hr><p><a name='Swirl'></a><h2>Swirl</h2><p><hr><p>
-(Your description of your implentation of Swirl goes here...)
+Rotates the outside of an image more than the inside to give a neat effect. 
 
 <br>You can include as many results as you want, but please at least include the following results:
 <br><img src='results/swirl_gauss.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Swirl=6.28318530718'>Push_Image=mesa.jpg&Swirl=6.28318530718;gaussian</a>
@@ -278,32 +278,42 @@ The third way is gaussian, which takes a gaussian weighted average of nearby pix
 
 <br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=man.jpg&Push_Image=doge.jpg&Push_Image=alpha.png&Get_Alpha=&Composite='>Push_Image=man.jpg&Push_Image=doge.jpg&Push_Image=alpha.png&Get_Alpha=&Composite=</a>
 
-<br><img src='results/placeholder.png'><p><hr><p><a name='Morph'></a><h2>Morph</h2><p><hr><p>
-(Your description of your implentation of Morph goes here...)
+<br><img src='results/placeholder.png'><p><hr><p>
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=chang.jpg&Push_Image=halber.jpg&Morph=(0,1,0.1)'>Push_Image=chang.jpg&Push_Image=halber.jpg&Morph=(0,1,0.1)</a>
+<a name='Morph'></a><h2>Morph</h2><p><hr><p>
+Changes an image shape to match another image (using user selected lines), while blending the colors of the two images together.
 
-<br><img src='results/placeholder.png'><p><hr><p><a name='Palette'></a><h2>Palette</h2><p><hr><p>
+<br>
+
+<br><img src='results/morph.gif'><br> <a href='batch.html?Push_Image=chang.jpg&Push_Image=halber.jpg&Morph=(0,1,0.1)'>Push_Image=chang.jpg&Push_Image=halber.jpg&Morph=(0,1,0.1)</a>
+
+<!--
+<p><hr><p><a name='Palette'></a><h2>Palette</h2><p><hr><p>
 (Your description of your implentation of Palette goes here...)
 
 <br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=leaves.jpg&Palette=3'>Push_Image=leaves.jpg&Palette=3</a>
-
+-->
 <p><hr><p><a name='Paint-by-numbers'></a><h2>Paint-by-numbers</h2><p><hr><p>
 This is a much simpler version of what is in the paper. It randomly draws circles of random sizes on the image and blends the circles together. The circles are smaller near an edge to help preserve them.
 
-
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/paint.png'> <br> <a href='batch.html?Push_Image=leaves.jpg&Paint=0.2'>Push_Image=leaves.jpg&Paint=0.2</a>
 
+<!--
 <br><img src='results/placeholder.png'><p><hr><p><a name='xDoG'></a><h2>xDoG</h2><p><hr><p>
 (Your description of your implentation of xDoG goes here...)
 
 <br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=leaves.jpg&XDoG=0.5'>Push_Image=leaves.jpg&XDoG=0.5</a>
 
-<br><img src='results/placeholder.png'><p><hr><p><a name='Art+Contest'></a><h2>Art Contest</h2><p><hr><p>
-(Your description of your implentation of Art Contest goes here...)
+<br><img src='results/placeholder.png'>
 
-<br>You can include as many results as you want, but please at least include the following results:    </div>
+-->
+<p><hr><p><a name='Art+Contest'></a><h2>Art Contest</h2><p><hr><p>
+A poor implentation of the edge filter.
+
+<br>
+<br><img src='results/badedge.jpg'>
+  </div>
 </body>
 </html>
