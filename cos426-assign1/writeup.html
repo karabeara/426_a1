@@ -47,13 +47,15 @@
         </ul></div>
 
 <p><hr><p><a name='Brush'></a><h2>Brush</h2><p><hr><p>
-(Your description of your implentation of Brush goes here...)
+Brush draws a circle at the point of a mouse click with a specified color and radius.
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=flower.jpg&Brush=16;[0.0968858131488,0.0968858131488,0.705882352941,1];x222y165x303y160x266y234'>Push_Image=flower.jpg&Brush=16;[0.0968858131488,0.0968858131488,0.705882352941,1];x222y165x303y160x266y234</a>
+<br>
 
-<br><img src='results/placeholder.png'><br> <a href='batch.html?Push_Image=town.jpg&Brush=10;[1,1,1,1];x475y83x304y100x135y187'>Push_Image=town.jpg&Brush=10;[1,1,1,1];x475y83x304y100x135y187</a>
+<br><img src='results/brush1.png'><br> <a href='batch.html?Push_Image=flower.jpg&Brush=16;[0.0968858131488,0.0968858131488,0.705882352941,1];x222y165x303y160x266y234'>Push_Image=flower.jpg&Brush=16;[0.0968858131488,0.0968858131488,0.705882352941,1];x222y165x303y160x266y234</a>
 
-<br><img src='results/placeholder.png'><p><hr><p><a name='Brightness'></a><h2>Brightness</h2><p><hr><p>
+<br><img src='results/brush2.png'><br> <a href='batch.html?Push_Image=town.jpg&Brush=10;[1,1,1,1];x475y83x304y100x135y187'>Push_Image=town.jpg&Brush=10;[1,1,1,1];x475y83x304y100x135y187</a>
+
+<p><hr><p><a name='Brightness'></a><h2>Brightness</h2><p><hr><p>
 
     This feature was implemented by the course staff.
     I used it as an example of how to loop over the pixels in an image.
@@ -72,10 +74,11 @@
     <p>
     I did not encounter any particular challenges in implementing this.
 
-<br>You can include as many results as you want, but please at least include the following results:<p><hr><p><a name='Contrast'></a><h2>Contrast</h2><p><hr><p>
+
+<p><hr><p><a name='Contrast'></a><h2>Contrast</h2><p><hr><p>
 (Your description of your implentation of Contrast goes here...)
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=leaves.jpg&Contrast=-1'>Push_Image=leaves.jpg&Contrast=-1</a>
+<br>
 
 <br><img src='results/contrast0.7.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Contrast=0.7'>Push_Image=leaves.jpg&Contrast=0.7</a>
 
@@ -84,27 +87,29 @@
 <br><img src='results/contrast-1.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Contrast=-1'>Push_Image=leaves.jpg&Contrast=-1</a>
 
 <p><hr><p><a name='Gamma'></a><h2>Gamma</h2><p><hr><p>
-(Your description of your implentation of Gamma goes here...)
+(Your description goes here)
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/gamma1.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Gamma=1'>Push_Image=mesa.jpg&Gamma=1</a>
 
 <br><img src='results/gamma-1.6.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Gamma=-1.6'>Push_Image=mesa.jpg&Gamma=-1.6</a>
 
 <p><hr><p><a name='Vignette'></a><h2>Vignette</h2><p><hr><p>
-(Your description of your implentation of Vignette goes here...)
+This darkens the periphery of the image but keeps the inside normal brightness. The inside of the inner circle in unchanged while the outside of the larger circle is black.
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=mesa.jpg&Vignette=0;0'>Push_Image=mesa.jpg&Vignette=0;0</a>
+<br>
+
+<br><img src='results/vignette0_0.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Vignette=0;0'>Push_Image=mesa.jpg&Vignette=0;0</a>
 
 <br><img src='results/vignette0.25_1.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Vignette=0.25;1'>Push_Image=mesa.jpg&Vignette=0.25;1</a>
 
 <br><img src='results/vignette0_0.75.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Vignette=0;0.75'>Push_Image=mesa.jpg&Vignette=0;0.75</a>
 
 <p><hr><p><a name='Histogram+equalization'></a><h2>Histogram equalization</h2><p><hr><p>
-(Your description of your implentation of Histogram equalization goes here...)
+Splits the image into bins based on luminance and adjusts the luminances to make the image have a flat histogram. 
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/histogram_flower.png'><br> <a href='batch.html?Push_Image=flower.jpg&Histogram_Equalization='>Push_Image=flower.jpg&Histogram_Equalization=</a>
 
@@ -113,7 +118,7 @@
 <p><hr><p><a name='Saturation'></a><h2>Saturation</h2><p><hr><p>
 (Your description of your implentation of Saturation goes here...)
 
-<br>You can include as many results as you want, but please at least include the following results:<br>
+<br>
 
 <br><img src='results/saturation1.png'> <a href='batch.html?Push_Image=leaves.jpg&Saturation=1'>Push_Image=leaves.jpg&Saturation=1</a>
 
@@ -127,23 +132,26 @@
 <br><img src='results/whitebalance.png'><br> <a href='batch.html?Push_Image=town.jpg&White_Balance=[0.5,0.5,0.5,1]'>Push_Image=town.jpg&White_Balance=[0.5,0.5,0.5,1]</a>
 
 <p><hr><p><a name='Histogram+matching'></a><h2>Histogram matching</h2><p><hr><p>
-(Your description of your implentation of Histogram matching goes here...)
+Splits the two images into "bins" by color (rgb) and adjusts the colors of the second image to match the histogram of bins of the first image.
 
 <br>You can include as many results as you want, but please at least include the following results:
 <br><img src='results/match_leaves_flowers.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Push_Image=flower.jpg&Histogram_Match=0.5'>Push_Image=leaves.jpg&Push_Image=flower.jpg&Histogram_Match=0.5</a>
 
 
 <p><hr><p><a name='Gaussian'></a><h2>Gaussian</h2><p><hr><p>
-(Your description of your implentation of Gaussian goes here...)
+Blurs pixels with it's neighbors according to a gaussian function based on distance, so pixels further out matter less. Works with two one dimentional convolutions to be more efficient.
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=leaves.jpg&Gaussian=4'>Push_Image=leaves.jpg&Gaussian=4</a>
+<br>
 
-<br><img src='results/gaussian4.png'><br> <a href='batch.html?Push_Image=man.jpg&Gaussian=7'>Push_Image=man.jpg&Gaussian=7</a>
+<br><img src='results/gaussian4.png'><br><a href='batch.html?Push_Image=leaves.jpg&Gaussian=4'>Push_Image=leaves.jpg&Gaussian=4</a>
 
-<br><img src='results/gaussian7.png'><p><hr><p><a name='Sharpen'></a><h2>Sharpen</h2><p><hr><p>
-(Your description of your implentation of Sharpen goes here...)
+<br><img src='results/gaussian7.png'><br><a href='batch.html?Push_Image=man.jpg&Gaussian=7'>Push_Image=man.jpg&Gaussian=7</a>
 
-<br>You can include as many results as you want, but please at least include the following results:
+<p><hr><p><a name='Sharpen'></a><h2>Sharpen</h2><p><hr><p>
+Enhances edges of an image. Works with a two-dimentional convolve matrix that results in a large value when a pixel is different from it's neighbors, and a low value otherwise. The matrix is like an edge matrix that adds on top of the original image.
+
+
+<br>
 
 <br><img src='results/sharpen_leaves.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Sharpen='>Push_Image=leaves.jpg&Sharpen=</a>
 
@@ -151,9 +159,9 @@
 
 
 <p><hr><p><a name='Edge+detect'></a><h2>Edge detect</h2><p><hr><p>
-(Your description of your implentation of Edge detect goes here...)
+Finds edges where color changes quickly. Works with a two-dimentional convolve matrix that results in a large value when a pixel is different from it's neighbors, and a low value otherwise. The sum of the matrix is zero.
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <br><img src='results/edge_leaves.png'><br> <a href='batch.html?Push_Image=leaves.jpg&Edge='>Push_Image=leaves.jpg&Edge=</a>
 
@@ -182,14 +190,14 @@
 
 <br><img src='results/placeholder.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Bilateral=5;3'>Push_Image=mesa.jpg&Bilateral=5;3</a>
 
-
+<!--
 <p><hr><p><a name='Quantize'></a><h2>Quantize</h2><p><hr><p>
 (Your description of your implentation of Quantize goes here...)
 
 <br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=mesa.jpg&Quantize=1'>Push_Image=mesa.jpg&Quantize=1</a>
 
 <br><img src='results/placeholder.png'><br> <a href='batch.html?Push_Image=mesa.jpg&Quantize=3'>Push_Image=mesa.jpg&Quantize=3</a>
-<!--
+
 <br><img src='results/placeholder.png'><p><hr><p><a name='Random+dither'></a><h2>Random dither</h2><p><hr><p>
 (Your description of your implentation of Random dither goes here...)
 
@@ -214,9 +222,11 @@
 <br><img src='results/placeholder.png'>
 -->
 <p><hr><p><a name='Sampling'></a><h2>Sampling</h2><p><hr><p>
-(Your description of your implentation of Sampling goes here...)
+There are three ways to sample. The naive way is "point", which just rounds the desired location to the closest pixel. This is bad because there is no band limiting so high frequency information can show up as low frequency information.
+The second way is "billateral", which averages the four nearest pixels. This is better, but it is still possible to have the sample dominated by one pixel if that's where the location is closest. This can be a problem when scaling for the same reasons "point" is bad.
+The third way is gaussian, which takes a gaussian weighted average of nearby pixels, this is better for bandlimiting the information and removing high frequency information.
 
-<br>You can include as many results as you want, but please at least include the following results:
+<br>
 
 <p><hr><p><a name='Translate'></a><h2>Translate</h2><p><hr><p>
 (Your description of your implentation of Translate goes here...)
@@ -278,11 +288,13 @@
 
 <br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=leaves.jpg&Palette=3'>Push_Image=leaves.jpg&Palette=3</a>
 
-<br><img src='results/paint.png'><p><hr><p><a name='Paint-by-numbers'></a><h2>Paint-by-numbers</h2><p><hr><p>
+<p><hr><p><a name='Paint-by-numbers'></a><h2>Paint-by-numbers</h2><p><hr><p>
 This is a much simpler version of what is in the paper. It randomly draws circles of random sizes on the image and blends the circles together. The circles are smaller near an edge to help preserve them.
 
 
-<br>You can include as many results as you want, but please at least include the following results:<br> <a href='batch.html?Push_Image=leaves.jpg&Paint=0.2'>Push_Image=leaves.jpg&Paint=0.2</a>
+<br>You can include as many results as you want, but please at least include the following results:
+
+<br><img src='results/paint.png'> <br> <a href='batch.html?Push_Image=leaves.jpg&Paint=0.2'>Push_Image=leaves.jpg&Paint=0.2</a>
 
 <br><img src='results/placeholder.png'><p><hr><p><a name='xDoG'></a><h2>xDoG</h2><p><hr><p>
 (Your description of your implentation of xDoG goes here...)
