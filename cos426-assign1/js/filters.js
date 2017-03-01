@@ -5,7 +5,7 @@ var Filters = Filters || {};
 
 
 // space for general utility functions, if you want
-var pi = 3.14159265359;
+var pi = Math.PI;
 
 function clamp(val, min, max) {
   return val < min ? min : (val > max ? max : val);
@@ -142,7 +142,7 @@ Filters.samplePixel = function ( image, x, y, mode ) {
   } else if ( mode == 'gaussian' ) {
     // ----------- STUDENT CODE BEGIN ------------
     // ----------- Our reference solution uses 37 lines of code.
-	var sigma = 0.75;
+	var sigma = 1;
 	var winR = Math.max(1, Math.round(sigma*3));
 
 	var red_sum = 0;
@@ -554,29 +554,55 @@ Filters.bilateralFilter = function( image, sigmaR, sigmaS ) {
   // ----------- STUDENT CODE BEGIN ------------
   // ----------- Our reference solution uses 48 lines of code.
   var newImg = image.createImg(image.width, image.height);
-  var winR = 3*sigmaR;
+  var winR = Math.round(Math.max(sigmaR,sigmaS)*2 ) + 1;
+ /*
+  var w1s = [];
+  for (var i_x = -winR; i_x <= winR; i_x++) {
+	 w1s[i_x] = [];
+	 for (var i_y = -winR; i_y <= winR; i_y++) {
+		 var d2 =(i_x)*(i_x) + (i_y)*(i_y);
+		 w1s[i_x][i_y] = 1/(sigmaR)*Math.exp(-d2/(2*sigmaR*sigmaR));
+	 }
+  }
+  var w2s = [];
+  for (var i_l = 0; i_l < 256; i_l++) {
+	  w2s[i_l] = 1/(sigmaS)*Math.exp(-(i_l/255)/(2*sigmaS*sigmaS));
+  }
+  */
   for (var x = 0; x < image.width; x++) {
 	  for (var y = 0; y < image.height; y++) {
-		    var lum_sum = 0;
+		//	var red_sum = 0;
+		//	var green_sum = 0;
+		//	var blue_sum = 0;
 			var weight_sum = 0;
+			var lum_sum = 0;
+		//	var red_weight_sum = 0;
+		//	var blue_weight_sum = 0;
+		//	var green_weight_sum = 0;
 			var c_pixel = image.getPixel(x,y);
-			var c_hslPixel = c_pixel.rgbToHsl();
-			for (var v_x = x-winR; v_x < x+winR; v_x++) {
-				for (var v_y = y-winR; v_y < y+winR; v_y++) {
-					if (v_x >= 0 && v_y >= 0 &&	v_x < image.width && v_y < image.height) {
-						var pixel = image.getPixel(v_x, v_y);
-						var dx2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
-						var w1 = 1/(sigmaR)*Math.exp(-dx2/(2*sigmaR*sigmaR));
-						var hslPixel = pixel.rgbToHsl();
-						var dl2 = (hslPixel.data[2]-c_hslPixel.data[2])*(hslPixel.data[2]-c_hslPixel.data[2]);
-						var w2 = 1/(sigmaS)*Math.exp(-dl2/(2*sigmaS*sigmaS));
-						lum_sum = lum_sum + w1 * w2 * hslPixel.data[2];
-						weight_sum = weight_sum + w1*w2;
-					}
+			for (var v_x = Math.max(x-winR, 0); v_x < Math.min(x+winR, image.width-1); v_x++) {
+				for (var v_y = Math.max(y-winR, 0); v_y < Math.min(y+winR, image.height-1); v_y++) {
+					var pixel = image.getPixel(v_x, v_y);
+					var dx2 = (x-v_x)*(x-v_x) + (y-v_y)*(y-v_y);
+					var dr2 = (pixel.data[0]-c_pixel.data[0])*(pixel.data[0]-c_pixel.data[0]);
+					var db2 = (pixel.data[1]-c_pixel.data[1])*(pixel.data[1]-c_pixel.data[1]);
+					var dg2 = (pixel.data[2]-c_pixel.data[2])*(pixel.data[2]-c_pixel.data[2]);
+		
+					var w = Math.exp(-dx2/(2*sigmaR*sigmaR) - (dr2+db2+dg2)/(6*sigmaS*sigmaS));
+			//		var w_green = Math.exp(-dx2/(2*sigmaR*sigmaR) - dg2/(2*sigmaS*sigmaS));
+			//		var w_blue = Math.exp(-dx2/(2*sigmaR*sigmaR) - db2/(2*sigmaS*sigmaS));
+			//		red_sum = red_sum + pixel.data[0]*w_red;
+			//		green_sum = green_sum + pixel.data[1]*w_green;
+			//		blue_sum = blue_sum + pixel.data[2]*w_blue;
+					var hsl = pixel.rgbToHsl();
+					weight_sum = weight_sum + w;
+					lum_sum = lum_sum + w * hsl.data[2];
+			//		green_weight_sum = green_weight_sum + w_green;
+			//		blue_weight_sum = blue_weight_sum + w_blue;
 				}
 			}
-			
-			var newPixel = new Pixel(c_hslPixel.data[0], c_hslPixel.data[1], lum_sum/weight_sum, c_hslPixel.a, "hsl").hslToRgb();
+			var hsl = c_pixel.rgbToHsl();
+			var newPixel = new Pixel(hsl.data[0], hsl.data[1], lum_sum/weight_sum, c_pixel.a, "hsl").hslToRgb();
 			newImg.setPixel(x, y, newPixel);
 	  }
   }
@@ -1032,16 +1058,14 @@ Filters.paintFilter = function( image, value ) {
 			var r = Math.max(1, Math.floor(50 * value * Math.random()));
 		}
 		//draw the circle
-		for (var x = xC - r; x < xC + r; x++) {
-			for (var y = yC - r; y < yC + r; y++) {
-				if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
-					if ((x - xC) * (x - xC) + (y - yC) * (y - yC) < r * r) {
-						if (painted[x][y]) {
-							newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
-						} else
-							newImg.setPixel(x, y, blend(image.getPixel(xC, yC), image.getPixel(x, y)));
-						painted[x][y] = true;
-					}
+		for (var x = Math.max(xC - r, 0); x < Math.min(xC + r, image.width-1); x++) {
+			for (var y = Math.max(yC - r, 0); y < Math.min(yC + r, image.height-1); y++) {
+				if ((x - xC) * (x - xC) + (y - yC) * (y - yC) < r * r) {
+					if (painted[x][y]) {
+						newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
+					} else
+						newImg.setPixel(x, y, blend(image.getPixel(xC, yC), image.getPixel(x, y)));
+					painted[x][y] = true;
 				}
 			}
 		}
@@ -1052,16 +1076,14 @@ Filters.paintFilter = function( image, value ) {
 	 for (var yC = 0; yC < image.height; yC++) {
 		 if (!painted[xC][yC]) {
 			var r = Math.max(1, Math.floor(5 * Math.random()));
-			for (var x = xC - r; x < xC + r; x++) {
-				for (var y = yC - r; y < yC + r; y++) {
-					if (x >= 0 && y >= 0 && x < image.width && y < image.height) {
-						if ((x - xC) * (x - xC) + (y - yC) * (y - yC) < r * r) {
-							if (painted[x][y]) {
-								newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
-							} else
-								newImg.setPixel(x, y, blend(image.getPixel(x,y) ,image.getPixel(xC, yC)));
-							painted[x][y] = true;
-						}
+			for (var x = Math.max(xC - r,0); x < Math.min(xC + r, image.width-1); x++) {
+				for (var y = Math.max(yC - r, 0); y < Math.min(yC + r,image.height-1); y++) {
+					if ((x - xC) * (x - xC) + (y - yC) * (y - yC) < r * r) {
+						if (painted[x][y]) {
+							newImg.setPixel(x, y, blend(image.getPixel(xC, yC), newImg.getPixel(x, y)));
+						} else
+							newImg.setPixel(x, y, blend(image.getPixel(x,y) ,image.getPixel(xC, yC)));
+						painted[x][y] = true;
 					}
 				}
 			}
